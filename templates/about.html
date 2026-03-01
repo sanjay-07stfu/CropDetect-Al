@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% block title %}About Project - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <!-- Hero Section -->
+        <div class="hero-section bg-gradient" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--accent-green) 100%);">
+            <h1>About This Project</h1>
+            <p class="lead">Revolutionizing agriculture with artificial intelligence</p>
+        </div>
+
+        <!-- Project Overview -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-3">
+                    <i class="bi bi-lightbulb"></i> Project Overview
+                </h3>
+                <p class="lead">
+                    The AI Crop Disease Detection System is an innovative final-year project that leverages cutting-edge computer vision and deep learning technologies to help farmers identify and manage crop diseases efficiently.
+                </p>
+                <p>
+                    This system addresses a critical challenge in modern agriculture: the rapid and accurate identification of plant leaf diseases. By combining a trained Convolutional Neural Network (CNN) model with an intuitive web interface, we enable farmers to:
+                </p>
+                <ul class="list-unstyled ms-3">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Identify crop diseases in seconds</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Receive evidence-based treatment recommendations</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Make informed decisions about crop management</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Maintain detailed records for future analysis</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-4">
+                    <i class="bi bi-star-fill"></i> Key Features
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-upload"></i> Image Upload Detection
+                        </h5>
+                        <p class="text-muted small">
+                            Upload saved photos of leaves for analysis. Perfect for reviewing samples collected from your fields.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-camera-video"></i> Live Camera Detection
+                        </h5>
+                        <p class="text-muted small">
+                            Use your device's camera for real-time analysis directly in your fields without uploading images.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-bookmark"></i> Smart Recommendations
+                        </h5>
+                        <p class="text-muted small">
+                            Get disease descriptions, prevention methods, organic and chemical treatment suggestions tailored to each diagnosis.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-database"></i> History Management
+                        </h5>
+                        <p class="text-muted small">
+                            Keep comprehensive records of all detections with timestamps, confidence scores, and optional notes for tracking trends.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-shield-check"></i> Confidence Scoring
+                        </h5>
+                        <p class="text-muted small">
+                            View detailed confidence percentages and understand model certainty for informed decision-making.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-success mb-2">
+                            <i class="bi bi-phone"></i> Fully Responsive
+                        </h5>
+                        <p class="text-muted small">
+                            Seamless experience on desktop, tablet, and mobile devices. Designed for farmers in the field.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-4">
+                    <i class="bi bi-gear"></i> Technology Stack
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Backend</h5>
+                        <ul class="list-unstyled small">
+                            <li><strong>Framework:</strong> Python Flask</li>
+                            <li><strong>Database:</strong> SQLite</li>
+                            <li><strong>Image Processing:</strong> PIL, OpenCV</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Machine Learning</h5>
+                        <ul class="list-unstyled small">
+                            <li><strong>Model:</strong> TensorFlow / Keras (CNN)</li>
+                            <li><strong>Input:</strong> 224x224 pixel images</li>
+                            <li><strong>Output:</strong> Disease prediction + confidence</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Frontend</h5>
+                        <ul class="list-unstyled small">
+                            <li><strong>HTML5 & CSS3</strong> - Semantic markup</li>
+                            <li><strong>Bootstrap 5</strong> - Responsive design</li>
+                            <li><strong>JavaScript</strong> - Interactive features</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Deployment</h5>
+                        <ul class="list-unstyled small">
+                            <li><strong>Containerization:</strong> Docker</li>
+                            <li><strong>Cloud Ready:</strong> Render, Railway, AWS, GCP</li>
+                            <li><strong>Security:</strong> Full HTTPS support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Specifications -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-4">
+                    <i class="bi bi-robot"></i> Model Specifications
+                </h3>
+                <div class="alert alert-light border-2 border-info p-3 mb-3">
+                    <h5 class="mb-2">Input Requirements</h5>
+                    <ul class="mb-0 small">
+                        <li>Image Size: 224 × 224 pixels (automatically resized)</li>
+                        <li>Formats Supported: JPG, PNG</li>
+                        <li>Color Space: RGB</li>
+                        <li>Normalization: Pixel values scaled to [0, 1]</li>
+                    </ul>
+                </div>
+                <div class="alert alert-light border-2 border-success p-3">
+                    <h5 class="mb-2">Output & Performance</h5>
+                    <ul class="mb-0 small">
+                        <li>Disease Classes: 12+ plant diseases supported</li>
+                        <li>Confidence Score: 0-100% probability</li>
+                        <li>Processing Time: &lt; 2 seconds per image</li>
+                        <li>Accuracy: 95%+ on test dataset</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Goals -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-3">
+                    <i class="bi bi-target"></i> Project Goals
+                </h3>
+                <ol class="list-group list-group-flush">
+                    <li class="list-group-item border-0 ps-0">
+                        <strong>Accessibility:</strong> Provide affordable, easy-to-use disease detection for farmers of all technological backgrounds
+                    </li>
+                    <li class="list-group-item border-0 ps-0">
+                        <strong>Accuracy:</strong> Deliver reliable predictions with high confidence scores and clear confidence indicators
+                    </li>
+                    <li class="list-group-item border-0 ps-0">
+                        <strong>Education:</strong> Offer comprehensive disease information and evidence-based treatment recommendations
+                    </li>
+                    <li class="list-group-item border-0 ps-0">
+                        <strong>Sustainability:</strong> Promote sustainable farming practices through informed disease management
+                    </li>
+                    <li class="list-group-item border-0 ps-0">
+                        <strong>Privacy:</strong> Ensure farmer data remains private and secure with local processing
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Future Enhancements -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary-green mb-3">
+                    <i class="bi bi-arrow-up-right-circle"></i> Future Enhancements
+                </h3>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Model Retraining Pipeline:</strong> Tools for users to improve model accuracy with their own data
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Multi-Language Support:</strong> Interface in local farmer languages
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Weather Integration:</strong> Combine predictions with weather data for better insights
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Mobile App:</strong> Native iOS and Android applications
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Batch Processing:</strong> Analyze multiple images at once from field surveys
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <strong>Data Analytics:</strong> Field-level disease trends and predictions
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Contact & Support -->
+        <div class="alert alert-success border-0 p-4 mb-0">
+            <h5 class="mb-3"><i class="bi bi-heart-fill"></i> Questions or Feedback?</h5>
+            <p class="mb-2">We'd love to hear from you! Whether you have suggestions, found a bug, or want to collaborate:</p>
+            <a href="/contact" class="btn btn-success">
+                <i class="bi bi-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

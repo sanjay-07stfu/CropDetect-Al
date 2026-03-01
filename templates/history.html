@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% block title %}Detection History - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Header Section -->
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="section-title">
+                    <i class="bi bi-clock-history"></i> Detection History
+                </h1>
+                <p class="text-muted text-center">
+                    View all your past detections and analysis records
+                </p>
+            </div>
+            {% if session.get('user') == 'admin' %}
+            <a href="/precache" class="btn btn-sm btn-outline-primary me-2">
+                <i class="bi bi-hdd-stack"></i> Pre‑cache All Images
+            </a>
+        {% endif %}
+        {% if records %}
+            <a href="/export" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-download"></i> Export CSV
+            </a>
+        {% endif %}
+        </div>
+
+        <!-- Stats Cards -->
+        {% if records %}
+        <!-- disease frequency chart removed -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card border-0 shadow-light text-center">
+                    <div class="card-body">
+                        <h3 class="text-success mb-1">{{ records|length }}</h3>
+                        <small class="text-muted">Total Detections</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card border-0 shadow-light text-center">
+                    <div class="card-body">
+                        <h3 class="text-info mb-1">
+                            {%- if records|length > 0 -%}
+                                {{ "%.1f"|format(records|map(attribute='confidence')|list|sum / records|length * 100) }}%
+                            {%- else -%}
+                                N/A
+                            {%- endif -%}
+                        </h3>
+                        <small class="text-muted">Avg Confidence</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-light text-center">
+                    <div class="card-body">
+                        <h3 class="text-primary mb-1">{{ records|map(attribute='disease')|unique|list|length }}</h3>
+                        <small class="text-muted">Unique Diseases</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Filter/Search Section -->
+        <div class="card shadow-light border-0 mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="form-control" 
+                            placeholder="Search by disease name..."
+                        >
+                    </div>
+                    <div class="col-md-6">
+                        <button 
+                            type="button" 
+                            class="btn btn-outline-secondary w-100" 
+                            onclick="resetFilters()"
+                        >
+                            <i class="bi bi-arrow-clockwise"></i> Reset Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Records Table -->
+        {% if records %}
+        <div class="table-responsive">
+            <table class="table table-hover" id="historyTable">
+                <thead>
+                    <tr>
+                        <th><i class="bi bi-hash"></i> #</th>
+                        <th><i class="bi bi-image"></i> Preview</th>
+                        <th><i class="bi bi-leaf"></i> Disease</th>
+                        <th><i class="bi bi-percent"></i> Confidence</th>
+                        <th><i class="bi bi-clock"></i> Date & Time</th>
+                        <th><i class="bi bi-card-text"></i> Description</th>
+                        <th><i class="bi bi-sticky"></i> Notes</th>
+                        <th><i class="bi bi-gear"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for rec in records %}
+                    <tr class="history-row" data-disease="{{ rec.disease|lower }}">
+                        <td><span class="badge bg-secondary">{{ rec.id }}</span></td>
+                        <td>
+                            <img 
+                                src="/{{ rec.image_path }}" 
+                                alt="Disease sample" 
+                                width="60" 
+                                height="60" 
+                                class="rounded object-fit-cover"
+                                style="object-fit: cover; cursor: pointer;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#imageModal"
+                                onclick="showImageModal('/{{ rec.image_path }}', '{{ rec.disease }}')"
+                            >
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ rec.disease }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1 me-2">
+                                    <div class="progress" style="height: 20px;">
+                                        <div 
+                                            class="progress-bar bg-success" 
+                                            role="progressbar" 
+                                            style="width: {{ (rec.confidence * 100)|round(2) }}%"
+                                            aria-valuenow="{{ (rec.confidence * 100)|round(2) }}" 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100"
+                                        >
+                                            {{ (rec.confidence*100)|round(2) }}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                {{ rec.timestamp|replace('T', ' ')|truncate(19, True, '') }}
+                            </small>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ rec.image_desc or '-' }}</small>
+                        </td>
+                        <td>
+                            <form method="post" action="/note/{{ rec.id }}" class="d-flex align-items-center">
+                                <input type="text" name="note" value="{{ rec.notes or '' }}" class="form-control form-control-sm me-2" placeholder="Add note">
+                                <button class="btn btn-sm btn-primary" type="submit" title="Save note">
+                                    <i class="bi bi-save"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form 
+                                method="post" 
+                                action="/delete/{{ rec.id }}" 
+                                style="display: inline;"
+                                onsubmit="return confirm('⚠️ Are you sure? This action cannot be undone.');"
+                            >
+                                <button 
+                                    class="btn btn-sm btn-danger" 
+                                    type="submit" 
+                                    title="Delete record"
+                                >
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Image Modal -->
+        <div class="modal fade" id="imageModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="modalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <img id="modalImage" src="" alt="Full size image" class="w-100 rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="mt-4 p-3 bg-light rounded">
+            <small class="text-muted">
+                <i class="bi bi-info-circle"></i> 
+                Showing {{ records|length }} records. Images are stored locally. 
+                <a href="/detect" class="text-decoration-none">Analyze new image →</a>
+            </small>
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="alert alert-light border-2 border-info text-center py-5">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+            <h4 class="text-muted mb-2">No Detection History</h4>
+            <p class="text-muted mb-3">You haven't made any disease detections yet.</p>
+            <a href="/detect" class="btn btn-success">
+                <i class="bi bi-upload"></i> Upload First Image
+            </a>
+            <a href="/camera" class="btn btn-primary ms-2">
+                <i class="bi bi-camera-video"></i> Use Camera
+            </a>
+        </div>
+        {% endif %}
+
+<!-- chart removed -->
+    </div>
+</div>
+
+<!-- JavaScript for filtering and modals -->
+<script>
+function showImageModal(src, disease) {
+    document.getElementById('modalImage').src = src;
+    document.getElementById('modalTitle').textContent = disease + ' - Full View';
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    filterResults();
+}
+
+function filterResults() {
+    const filterValue = document.getElementById('searchInput').value.toLowerCase();
+    const tableRows = document.querySelectorAll('.history-row');
+
+    tableRows.forEach(row => {
+        const disease = row.getAttribute('data-disease');
+        if (!filterValue || disease.includes(filterValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', filterResults);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Live Camera Detection - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <!-- Header Section -->
+        <div class="mb-4">
+            <h1 class="section-title">
+                <i class="bi bi-camera-video"></i> Live Camera Detection
+            </h1>
+            <p class="text-muted text-center">
+                Use your device camera for real-time crop disease detection
+            </p>
+        </div>
+
+        <div class="row">
+            <!-- Camera Feed Section -->
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-3">
+                        <label class="form-label fw-bold mb-3">Camera Feed</label>
+                        <div class="video-container bg-dark rounded">
+                            <video 
+                                id="video" 
+                                width="100%" 
+                                autoplay 
+                                playsinline 
+                                style="border-radius: 8px;"
+                            ></video>
+                        </div>
+                        <button 
+                            id="captureBtn" 
+                            type="button" 
+                            class="btn btn-success btn-lg w-100 mt-3"
+                        >
+                            <i class="bi bi-camera-fill"></i> Capture & Analyze
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-3">
+                        <label class="form-label fw-bold mb-3">Analysis Results</label>
+                        <div 
+                            id="result" 
+                            class="bg-light rounded p-4" 
+                            style="min-height: 400px; display: flex; align-items: center; justify-content: center;"
+                        >
+                            <div class="text-center text-muted">
+                                <i class="bi bi-arrow-left" style="font-size: 2rem;"></i>
+                                <p class="mt-2">Capture an image to see results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="alert alert-info border-2 border-info p-4 mt-4">
+            <h5 class="mb-3"><i class="bi bi-info-circle"></i> How to Use</h5>
+            <ol class="mb-0 small">
+                <li>Allow camera access when your browser asks</li>
+                <li>Make sure the leaf is clearly visible in the camera frame</li>
+                <li>Good lighting is important for accurate detection</li>
+                <li>Click "Capture & Analyze" to take a photo and get results</li>
+                <li>The result will appear in the right panel with disease information</li>
+            </ol>
+        </div>
+
+        <!-- Troubleshooting Section -->
+        <div class="alert alert-light border-2 border-warning p-4 mt-3">
+            <h5 class="mb-3"><i class="bi bi-exclamation-triangle"></i> Troubleshooting</h5>
+            <ul class="mb-0 small">
+                <li><strong>Camera not working?</strong> Check your browser permissions and allow camera access</li>
+                <li><strong>Poor camera quality?</strong> Ensure adequate lighting and keep the device steady</li>
+                <li><strong>Blurry results?</strong> Allow the camera to auto-focus before capturing</li>
+                <li><strong>Still having issues?</strong> Try using the <a href="/detect">upload method</a> instead</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    #video {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #000;
+    }
+</style>
+{% endblock %}

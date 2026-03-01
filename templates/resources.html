@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% block title %}Resources & Products - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Header Section -->
+        <div class="mb-5">
+            <h1 class="section-title">
+                <i class="bi bi-shop"></i> Resources & Products
+            </h1>
+            <p class="text-muted text-center">
+                Find recommended supplements, fertilizers, and treatment products for crop disease management
+            </p>
+        </div>
+
+        <!-- Tabs for different categories -->
+        <ul class="nav nav-tabs mb-4" id="resourceTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="supplements-tab" data-bs-toggle="tab" data-bs-target="#supplements" type="button" role="tab">
+                    <i class="bi bi-capsule"></i> Supplements & Fertilizers
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="fungicides-tab" data-bs-toggle="tab" data-bs-target="#fungicides" type="button" role="tab">
+                    <i class="bi bi-droplet"></i> Fungicides
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pesticides-tab" data-bs-toggle="tab" data-bs-target="#pesticides" type="button" role="tab">
+                    <i class="bi bi-bug"></i> Pesticides & Treatments
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab">
+                    <i class="bi bi-tools"></i> Tools & Equipment
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="education-tab" data-bs-toggle="tab" data-bs-target="#education" type="button" role="tab">
+                    <i class="bi bi-book"></i> Learning Resources
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="resourceTabContent">
+            <!-- Supplements & Fertilizers Tab -->
+            <div class="tab-pane fade show active" id="supplements" role="tabpanel">
+                <div class="row">
+                    <!-- NPK Fertilizer -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-leaf"></i> NPK Balanced Fertilizer</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    High-quality balanced NPK (15-15-15) fertilizer for general crop nutrition and disease resistance.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-info me-2">Best Quality</span>
+                                    <span class="badge bg-success">Organic Available</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=NPK+fertilizer" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Neem Oil -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Neem Oil Spray</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    100% organic neem oil for pest control and leaf disease prevention. Safe for organic farming.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">100% Organic</span>
+                                    <span class="badge bg-info">Natural Pesticide</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Neem+oil+spray" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Potassium Nitrate -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-capsule"></i> Potassium Nitrate</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Premium potassium nitrate for improved plant strength and disease resistance enhancement.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Essential Nutrient</span>
+                                    <span class="badge bg-info">Boosts Immunity</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Potassium+nitrate+fertilizer" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Micronutrient Mix -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-vial"></i> Micronutrient Mix</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Complete micronutrient formula (Zn, Fe, Mn, Cu, B) for crop vitality and immune system.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Complete Mix</span>
+                                    <span class="badge bg-info">Boosts Immunity</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Micronutrient+fertilizer" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seaweed Extract -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Seaweed Extract</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Natural seaweed-based biostimulant for plant growth and disease resistance.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Organic</span>
+                                    <span class="badge bg-info">Natural Growth</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Seaweed+extract" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calcium Nitrate -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-success-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-capsule"></i> Calcium Nitrate</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Pure calcium nitrate for cell wall strength and improved disease tolerance in crops.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Cell Strength</span>
+                                    <span class="badge bg-info">Disease Defense</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Calcium+nitrate+fertilizer" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fungicides Tab -->
+            <div class="tab-pane fade" id="fungicides" role="tabpanel">
+                <div class="row">
+                    <!-- Sulfur Dust -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Sulfur Dust/Powder</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Elemental sulfur for powdery mildew, rust, and fungal disease control. Safe organic option.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Organic Approved</span>
+                                    <span class="badge bg-warning">Fungicide</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Sulfur+dust+fungicide" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Copper Fungicide -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Copper Fungicide</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Copper-based fungicide for bacterial and fungal leaf spots, blight, and downy mildew.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Broad Spectrum</span>
+                                    <span class="badge bg-success">Organic Option</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Copper+fungicide+spray" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mancozeb -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Mancozeb</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Systemic-contact fungicide for late blight, early blight, and various leaf spot diseases.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Systemic Action</span>
+                                    <span class="badge bg-danger">Chemical</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Mancozeb+fungicide" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carbendazim -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Carbendazim</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Systemic benzimidazole fungicide for powdery mildew, leaf spot, and sheath blight.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Systemic</span>
+                                    <span class="badge bg-danger">Chemical</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Carbendazim+fungicide" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bordeaux Mixture -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Bordeaux Mixture</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Classic copper-lime fungicide for blight, leaf spots, and anthracnose control.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Organic Approved</span>
+                                    <span class="badge bg-warning">Proven Formula</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Bordeaux+mixture" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Propiconazole -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-warning-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-droplet"></i> Propiconazole</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Triazole fungicide with preventive and curative action for various fungal diseases.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Dual Action</span>
+                                    <span class="badge bg-danger">Chemical</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Propiconazole+fungicide" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pesticides Tab -->
+            <div class="tab-pane fade" id="pesticides" role="tabpanel">
+                <div class="row">
+                    <!-- Insecticidal Soap -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-danger-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-bug"></i> Insecticidal Soap</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Organic soap spray for aphids, mites, whiteflies, and leaf-eating insects.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Organic</span>
+                                    <span class="badge bg-info">Safe for Bees</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Insecticidal+soap" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spinosad -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-danger-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-bug"></i> Spinosad</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Organic bioinsecticide derived from soil bacteria effective against leaf miners and thrips.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Organic Approved</span>
+                                    <span class="badge bg-info">Natural origin</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Spinosad+insecticide" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chlorpyrifos -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-danger-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-bug"></i> Chlorpyrifos</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Broad-spectrum organophosphate insecticide for various crop pests and leaf-eating insects.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-danger me-2">Chemical</span>
+                                    <span class="badge bg-warning">Broad Spectrum</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Chlorpyrifos" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Imidacloprid -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-danger-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-bug"></i> Imidacloprid</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Systemic neonicotinoid for whiteflies, aphids, and sucking insects on leaves.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-danger me-2">Chemical</span>
+                                    <span class="badge bg-info">Systemic Action</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Imidacloprid" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools & Equipment Tab -->
+            <div class="tab-pane fade" id="tools" role="tabpanel">
+                <div class="row">
+                    <!-- Sprayer -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-info-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-tools"></i> Pump Sprayer</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    High-pressure hand/battery operated sprayer for uniform application of fungicides and insecticides.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-info me-2">Essential Tool</span>
+                                    <span class="badge bg-warning">2-5L Capacity</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Pump+sprayer" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Soil Tester -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-info-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-tools"></i> Soil pH Tester</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Digital soil pH and moisture meter for optimal growing conditions and disease management.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Digital</span>
+                                    <span class="badge bg-info">Precise Reading</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Soil+pH+meter+tester" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pruning Tools -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-info-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-tools"></i> Pruning Tools Set</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Professional pruning shears and secateurs for removing affected leaves and branches.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Disease Management</span>
+                                    <span class="badge bg-info">Stainless Steel</span>
+                                </div>
+                                <a href="https://www.amazon.in/s?k=Pruning+tools+secateurs" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> View on Amazon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Resources Tab -->
+            <div class="tab-pane fade" id="education" role="tabpanel">
+                <div class="row">
+                    <!-- Wikipedia -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-primary-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-book"></i> Wikipedia</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Comprehensive information about crop diseases, plant pathology, and agricultural science.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">Free Resource</span>
+                                    <span class="badge bg-success">Educational</span>
+                                </div>
+                                <a href="https://en.wikipedia.org/wiki/Plant_disease" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> Visit Site
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ICRISAT -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-primary-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-book"></i> ICRISAT Resources</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    International Crops Research Institute with extensive crop disease research and guides.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">Expert Research</span>
+                                    <span class="badge bg-success">Science-Based</span>
+                                </div>
+                                <a href="https://www.icrisat.org/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> Visit Site
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAO Plant Protection -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-primary-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-book"></i> FAO Plant Protection</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    UN Food & Agriculture Organization guides on integrated pest and disease management.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">Official Guides</span>
+                                    <span class="badge bg-success">Global Standards</span>
+                                </div>
+                                <a href="https://www.fao.org/crops/home/en" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> Visit Site
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AgriTech Forums -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-light border-0 h-100 card-with-hover">
+                            <div class="card-header bg-primary-light border-0 p-3">
+                                <h5 class="mb-0"><i class="bi bi-chat"></i> Farmer Forums</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">
+                                    Community forums where farmers share disease identification and treatment experiences.
+                                </p>
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">Community</span>
+                                    <span class="badge bg-info">Peer Support</span>
+                                </div>
+                                <a href="https://www.agritech.org/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> Visit Site
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer Alert -->
+        <div class="alert alert-info border-2 border-info mt-5 p-4">
+            <h5 class="mb-2"><i class="bi bi-info-circle"></i> Important Notes</h5>
+            <ul class="mb-0 small">
+                <li><strong>Privacy:</strong> All product links are external redirects. We don't track purchases or collect data from third-party websites.</li>
+                <li><strong>Pricing:</strong> Prices vary by vendor and region. Always compare prices before purchasing.</li>
+                <li><strong>Recommendations:</strong> Product suggestions are general guidelines. Consult local agricultural experts for region-specific advice.</li>
+                <li><strong>Safety:</strong> Always follow product labels and safety instructions when using chemicals.</li>
+                <li><strong>Organic Certification:</strong> Check for local organic certification before using products marked as "organic."</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% block title %}Contact - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <!-- Header Section -->
+        <div class="mb-5">
+            <h1 class="section-title">
+                <i class="bi bi-envelope"></i> Get In Touch
+            </h1>
+            <p class="text-muted text-center">
+                Have questions, feedback, or want to collaborate? We'd love to hear from you!
+            </p>
+        </div>
+
+        <!-- Contact Information Cards -->
+        <div class="row mb-5">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card shadow-light border-0 text-center card-with-hover">
+                    <div class="card-body p-4">
+                        <i class="bi bi-envelope" style="font-size: 2.5rem; color: var(--primary-green);"></i>
+                        <h5 class="mt-3 mb-2">Email</h5>
+                        <a href="mailto:yedagesanjay8@gmail.com" class="text-decoration-none">
+                            yedagesanjay8@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card shadow-light border-0 text-center card-with-hover">
+                    <div class="card-body p-4">
+                        <i class="bi bi-telephone" style="font-size: 2.5rem; color: var(--primary-green);"></i>
+                        <h5 class="mt-3 mb-2">Phone</h5>
+                        <p class="text-muted small mb-0">9699429298</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-light border-0 text-center card-with-hover">
+                    <div class="card-body p-4">
+                        <i class="bi bi-geo-alt" style="font-size: 2.5rem; color: var(--primary-green);"></i>
+                        <h5 class="mt-3 mb-2">Location</h5>
+                        <p class="text-muted small mb-0">Research Institute<br>University Campus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="card shadow-lg border-0 mb-5">
+            <div class="card-body p-4">
+                <h4 class="mb-4">Send us a Message</h4>
+                <form id="contactForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="name" 
+                                name="name" 
+                                required
+                                placeholder="Your name"
+                            >
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                id="email" 
+                                name="email" 
+                                required
+                                placeholder="your@email.com"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="subject" 
+                            name="subject" 
+                            required
+                            placeholder="What is this about?"
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select a category...</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="bug">Report a Bug</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="collaboration">Collaboration</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea 
+                            class="form-control" 
+                            id="message" 
+                            name="message" 
+                            rows="6" 
+                            required
+                            placeholder="Your message here..."
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="bi bi-send"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div>
+            <h4 class="mb-4">Frequently Asked Questions</h4>
+            <div class="accordion accordion-flush" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            <i class="bi bi-question-circle me-2"></i> Is my data safe?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, all image processing happens locally on your device. We do not send your images to external servers or store them permanently unless you explicitly save them to history.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            <i class="bi bi-question-circle me-2"></i> What image formats are supported?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We support JPG and PNG formats. For best results, ensure your image is at least 224×224 pixels and clearly shows the leaf disease symptoms.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            <i class="bi bi-question-circle me-2"></i> How accurate is the model?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Our CNN model achieves 95%+ accuracy on our test dataset. However, accuracy depends on image quality, lighting, and disease symptoms. Always verify results with domain experts when making critical decisions.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            <i class="bi bi-question-circle me-2"></i> Can I delete my records?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, you can delete any record from your history anytime. This will remove both the image and the associated detection data from your local database.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            <i class="bi bi-question-circle me-2"></i> Is the app available offline?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The application requires internet only for initial setup and model download. Once deployed locally or on a server within your network, it can be used offline with proper caching.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                            <i class="bi bi-question-circle me-2"></i> How do I contribute to this project?
+                        </button>
+                    </h2>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We welcome contributions! Please email us with your ideas, improvements, or bug reports. Check our GitHub repository for code contributions and development guidelines.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for form handling -->
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        category: document.getElementById('category').value,
+        message: document.getElementById('message').value
+    };
+
+    // Show success message
+    alert('Thank you for your message! We will get back to you soon.\n\nNote: This is a demo form. In production, messages would be sent to your server.');
+    
+    // Reset form
+    this.reset();
+});
+</script>
+{% endblock %}

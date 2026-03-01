@@ -1,0 +1,631 @@
+{% extends 'base.html' %}
+{% block title %}Login - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <!-- Animated Background -->
+    <div class="login-background">
+        <div class="farm-bg-1"></div>
+        <div class="farm-bg-2"></div>
+        <div class="animated-leaves">
+            <span class="leaf" style="--delay: 0s;">🍃</span>
+            <span class="leaf" style="--delay: 0.5s;">🌿</span>
+            <span class="leaf" style="--delay: 1s;">🍃</span>
+            <span class="leaf" style="--delay: 1.5s;">🌿</span>
+            <span class="leaf" style="--delay: 2s;">🍃</span>
+        </div>
+    </div>
+
+    <!-- Login Form Container -->
+    <div class="login-form-wrapper">
+        <div class="login-card glass-effect">
+            <!-- Header with Icon -->
+            <div class="login-header">
+                <div class="logo-icon">🌾</div>
+                <h1 class="login-title">Crop Guardian</h1>
+                <p class="login-subtitle">AI-Powered Disease Detection</p>
+            </div>
+
+            <!-- Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} fade-in-alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Login Form -->
+            <form method="post" class="login-form">
+                <div class="form-group-animated">
+                    <div class="input-wrapper">
+                        <i class="bi bi-envelope"></i>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            class="form-control-animated" 
+                            placeholder="Email Address"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <div class="form-group-animated">
+                    <div class="input-wrapper">
+                        <i class="bi bi-lock"></i>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            class="form-control-animated" 
+                            placeholder="Password"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login-submit">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </form>
+
+            <!-- Register Link -->
+            <div class="login-footer">
+                <p>New to Crop Guardian? 
+                    <a href="/register" class="register-link">Create Account</a>
+                </p>
+            </div>
+
+            <!-- Demo Credentials Info -->
+            <div class="demo-info">
+                <small>
+                    <i class="bi bi-info-circle"></i> 
+                    Demo: admin@example.com / password
+                </small>
+            </div>
+        </div>
+
+        <!-- Right Side Decorative Info -->
+        <div class="login-info-side">
+            <div class="info-card info-card-1">
+                <div class="info-icon">🔍</div>
+                <h3>Instant Detection</h3>
+                <p>Identify crop diseases in seconds</p>
+            </div>
+            <div class="info-card info-card-2">
+                <div class="info-icon">💡</div>
+                <h3>AI Powered</h3>
+                <p>Advanced machine learning analysis</p>
+            </div>
+            <div class="info-card info-card-3">
+                <div class="info-icon">🌱</div>
+                <h3>Save Crops</h3>
+                <p>Get treatment recommendations</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ============================================
+   LOGIN PAGE ANIMATIONS & STYLES
+   ============================================ */
+
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+}
+
+/* Animated Background */
+.login-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.farm-bg-1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%23a8d8ea;stop-opacity:0.3"/><stop offset="100%" style="stop-color:%2387ceeb;stop-opacity:0.1"/></linearGradient></defs><rect width="1200" height="600" fill="url(%23sky)"/><path d="M0,400 Q300,350 600,400 T1200,400 L1200,600 L0,600 Z" fill="%2327ae60" opacity="0.15"/><circle cx="150" cy="80" r="40" fill="%23FFD700" opacity="0.3"/></svg>') no-repeat center/cover;
+    opacity: 0.3;
+    animation: fadeInBg 2s ease-out;
+}
+
+.farm-bg-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="field" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><line x1="0" y1="50" x2="100" y2="50" stroke="%2316a085" stroke-width="1" opacity="0.2"/><line x1="50" y1="0" x2="50" y2="100" stroke="%2316a085" stroke-width="1" opacity="0.2"/></pattern></defs><rect width="1200" height="600" fill="url(%23field)"/></svg>') repeat;
+    opacity: 0.15;
+    animation: slideInBg 20s linear infinite;
+}
+
+@keyframes slideInBg {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100px); }
+}
+
+@keyframes fadeInBg {
+    from { opacity: 0; }
+    to { opacity: 0.6; }
+}
+
+/* Floating Leaves */
+.animated-leaves {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.leaf {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: float 6s ease-in-out infinite;
+}
+
+.leaf:nth-child(1) { left: 10%; top: -10px; --delay: 0s; animation-delay: var(--delay); }
+.leaf:nth-child(2) { left: 30%; top: -10px; --delay: 0.5s; animation-delay: var(--delay); }
+.leaf:nth-child(3) { left: 50%; top: -10px; --delay: 1s; animation-delay: var(--delay); }
+.leaf:nth-child(4) { left: 70%; top: -10px; --delay: 1.5s; animation-delay: var(--delay); }
+.leaf:nth-child(5) { left: 90%; top: -10px; --delay: 2s; animation-delay: var(--delay); }
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(300px) rotate(180deg);
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(600px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Login Container */
+.login-form-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    animation: slideInUp 0.8s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Glass Effect Card */
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInCard 0.8s ease-out;
+    background-image: url('/static/images/01.webp');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.92);
+    z-index: 1;
+}
+
+@keyframes slideInCard {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Login Header */
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeInDown 0.8s ease-out;
+    position: relative;
+    z-index: 2;
+}
+
+.logo-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.login-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f3460;
+    margin: 0.5rem 0;
+    letter-spacing: -1px;
+}
+
+.login-subtitle {
+    font-size: 1rem;
+    color: #27ae60;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Form Groups */
+.form-group-animated {
+    position: relative;
+    margin-bottom: 1.8rem;
+    animation: fadeIn 0.6s ease-out backwards;
+    z-index: 2;
+}
+
+.form-group-animated:nth-child(1) { animation-delay: 0.2s; }
+.form-group-animated:nth-child(2) { animation-delay: 0.3s; }
+
+@keyframes fadeIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    color: #27ae60;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control-animated {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-control-animated:focus {
+    outline: none;
+    border-color: #27ae60;
+    background: white;
+    box-shadow: 0 0 15px rgba(39, 174, 96, 0.2);
+}
+
+.form-group-animated:has(.form-control-animated:focus) .input-wrapper i {
+    color: #16a085;
+    transform: scale(1.2);
+}
+
+.input-focus-line {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #27ae60, #16a085);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.form-group-animated:has(.form-control-animated:focus) .input-focus-line {
+    width: 100%;
+}
+
+/* Submit Button */
+.btn-login-submit {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out backwards 0.4s;
+    z-index: 2;
+}
+
+.btn-login-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-login-submit:hover::before {
+    left: 100%;
+}
+
+.btn-login-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(39, 174, 96, 0.4);
+}
+
+.btn-login-submit:active {
+    transform: translateY(0);
+}
+
+.btn-arrow {
+    transition: transform 0.3s ease;
+}
+
+.btn-login-submit:hover .btn-arrow {
+    transform: translateX(3px);
+}
+
+/* Alert */
+.fade-in-alert {
+    animation: fadeInAlert 0.5s ease-out;
+}
+
+@keyframes fadeInAlert {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Login Footer */
+.login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    animation: fadeIn 0.6s ease-out backwards 0.5s;
+    position: relative;
+    z-index: 2;
+}
+
+.register-link {
+    color: #27ae60;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.register-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #27ae60;
+    transition: width 0.3s ease;
+}
+
+.register-link:hover::after {
+    width: 100%;
+}
+
+/* Demo Info */
+.demo-info {
+    margin-top: 1.5rem;
+    padding: 10px;
+    background: #f0f8f5;
+    border-left: 4px solid #27ae60;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #27ae60;
+    animation: fadeIn 0.6s ease-out backwards 0.6s;
+    position: relative;
+    z-index: 2;
+}
+
+/* Info Cards (Right Side) */
+.login-info-side {
+    position: relative;
+    z-index: 1;
+    animation: slideInRight 0.8s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.info-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.info-card h3 {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    font-weight: 600;
+}
+
+.info-card p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    animation: bobbing 3s ease-in-out infinite;
+}
+
+.info-card-1 .info-icon { animation-delay: 0s; }
+.info-card-2 .info-icon { animation-delay: 0.3s; }
+.info-card-3 .info-icon { animation-delay: 0.6s; }
+
+@keyframes bobbing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-form-wrapper {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .login-info-side {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .info-card {
+        padding: 1rem;
+        margin-bottom: 0;
+    }
+    
+    .login-card {
+        padding: 2rem;
+    }
+    
+    .login-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+    
+    .login-title {
+        font-size: 1.5rem;
+    }
+    
+    .logo-icon {
+        font-size: 3rem;
+    }
+    
+    .login-info-side {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

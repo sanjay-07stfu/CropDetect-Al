@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% block title %}Image Upload Detection - AI Crop Disease Detection{% endblock %}
+
+{% block content %}
+<!-- page header -->
+<div class="mb-4 text-center">
+    <h1 class="section-title">
+        <i class="bi bi-image"></i> Leaf Disease Detection
+    </h1>
+    <p class="text-muted">
+        Upload a photo or capture live to identify crop diseases instantly.
+    </p>
+</div>
+
+<!-- two column dashboard layout -->
+<div class="row">
+    <!-- left panel: upload / camera -->
+    <div class="col-lg-6">
+        <!-- Demo Mode Alert -->
+        {% if not info %}
+        <div class="alert alert-info border-2 border-info p-3 mb-4">
+            <h6 class="mb-2"><i class="bi bi-info-circle"></i> How It Works</h6>
+            <p class="small mb-2">Upload any leaf image to:</p>
+            <ul class="small mb-0">
+                <li>Get AI disease prediction with confidence score</li>
+                <li>View detailed disease description & prevention methods</li>
+                <li>Find recommended supplements & fungicides</li>
+                <li>Get direct links to purchase products</li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- upload card -->
+        <div class="result-card mb-4">
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-box mb-3">
+                    <label for="imageInput" class="upload-box-label">
+                        <div class="upload-icon">📸</div>
+                        <h5 class="mb-2">Upload Leaf Image</h5>
+                        <p class="text-muted mb-0 small">
+                            Drag and drop your image here or click to browse
+                        </p>
+                        <p class="text-muted small mt-2">
+                            Supported formats: JPG, PNG (Max 5MB)
+                        </p>
+                    </label>
+                    <input 
+                        type="file" 
+                        id="imageInput" 
+                        name="image" 
+                        accept="image/*" 
+                        required 
+                        class="form-control"
+                        style="display: none;"
+                    >
+                </div>
+                <!-- description textarea -->
+                <div class="mb-3">
+                    <label for="image_desc" class="form-label">Image Description (optional)</label>
+                    <textarea id="image_desc" name="image_desc" class="form-control" rows="2" placeholder="Write a brief description of the leaf or conditions..."></textarea>
+                </div>
+
+                <div id="previewContainer" class="mb-3" style="display: none;">
+                    <label class="form-label">Preview</label>
+                    <div class="position-relative">
+                        <img id="previewImage" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 300px;">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" id="removeImageBtn">
+                            <i class="bi bi-x-circle"></i> Remove
+                        </button>
+                    </div>
+                </div>
+
+                <div id="fileInfo" class="alert alert-info small mb-3" style="display: none;">
+                    <strong>Selected:</strong> <span id="fileName"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100" id="submitBtn">
+                    <i class="bi bi-lightning-charge"></i> Analyze Image
+                </button>
+            </form>
+        </div>
+
+        <!-- camera & tips -->
+        <div class="d-flex justify-content-between mb-4">
+            <a href="/camera" class="btn btn-primary me-2 w-50">
+                <i class="bi bi-camera-video"></i> Live Camera
+            </a>
+            <button type="button" class="btn btn-secondary w-50" onclick="location.reload();">
+                <i class="bi bi-arrow-clockwise"></i> New Upload
+            </button>
+        </div>
+
+        <div class="alert alert-light border-2 border-primary-green p-4">
+            <h5 class="mb-3"><i class="bi bi-lightbulb"></i> Tips for Best Results</h5>
+            <ul class="mb-0 small">
+                <li>Use clear, well-lit photos of the affected leaf</li>
+                <li>Ensure the leaf takes up most of the image</li>
+                <li>Avoid blurry or tilted images</li>
+                <li>Include visible disease symptoms for accurate detection</li>
+                <li>Image should be at least 224x224 pixels</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- right panel: prediction result + translation -->
+    <div class="col-lg-6">
+        <!-- translation widget -->
+        <div id="google_translate_element" class="mb-3 text-end"></div>
+
+        {% if disease %}
+        <div class="result-container">
+            <div class="result-card">
+                <h2 class="result-title mb-4">
+                    <i class="bi bi-check-circle-fill text-success"></i> Detection Result
+                </h2>
+
+                <!-- description of leaf/disease for visibility -->
+                {% if info.description %}
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Leaf Description:</strong></p>
+                    <p>{{ info.description }}</p>
+                </div>
+                {% else %}
+                <div class="mb-3">
+                    <p class="text-muted">No disease information available for this prediction.</p>
+                </div>
+                {% endif %}
+                <div class="disease-name">
+                    {{ disease.replace('_', ' ') }}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Confidence Level</label>
+                    <div class="confidence-bar">
+                        <div 
+                            class="confidence-fill" 
+                            style="--confidence-width: {{ (confidence * 100)|round(2) }}%"
+                        >
+                            {{ (confidence*100)|round(2) }}%
+                        </div>
+                    </div>
+                    <small class="text-muted">Model confidence in this prediction</small>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Analyzed Image</label>
+                    <div class="text-center">
+                        <img src="{{ image_url }}" alt="Uploaded leaf" class="result-image img-fluid">
+                    </div>
+                </div>
+                {% if image_desc %}
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Your Description</label>
+                    <p>{{ image_desc }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if info %}
+            <div class="disease-info-section">
+                <h4 class="mb-3"><i class="bi bi-book"></i> Disease Information & Treatment</h4>
+                <div class="accordion info-accordion" id="diseaseAccordion">
+                    <!-- Description -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionCollapse">
+                                <i class="bi bi-justify-left me-2"></i> Description
+                            </button>
+                        </h2>
+                        <div id="descriptionCollapse" class="accordion-collapse collapse show" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                {{ info.description }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prevention -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preventionCollapse">
+                                <i class="bi bi-shield-check me-2"></i> Prevention Methods
+                            </button>
+                        </h2>
+                        <div id="preventionCollapse" class="accordion-collapse collapse" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                {{ info.prevention }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organic Treatment -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#organicCollapse">
+                                <i class="bi bi-leaf me-2"></i> Organic Treatment
+                            </button>
+                        </h2>
+                        <div id="organicCollapse" class="accordion-collapse collapse" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                {{ info.organic }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chemical Treatment -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#chemicalCollapse">
+                                <i class="bi bi-droplet me-2"></i> Chemical Treatment
+                            </button>
+                        </h2>
+                        <div id="chemicalCollapse" class="accordion-collapse collapse" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                {{ info.chemical }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Precautions -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#precautionsCollapse">
+                                <i class="bi bi-exclamation-triangle me-2"></i> Precautions
+                            </button>
+                        </h2>
+                        <div id="precautionsCollapse" class="accordion-collapse collapse" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                {{ info.precautions }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Products -->
+                    {% if info.products %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse">
+                                <i class="bi bi-shop me-2"></i> Recommended Products
+                            </button>
+                        </h2>
+                        <div id="productsCollapse" class="accordion-collapse collapse" data-bs-parent="#diseaseAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    {% if info.products.supplements %}
+                                    <div class="col-md-6 mb-3">
+                                        <h6 class="text-success mb-2"><i class="bi bi-capsule"></i> Supplements & Fertilizers</h6>
+                                        <div class="list-group list-group-sm">
+                                            {% for product in info.products.supplements %}
+                                            <a href="{{ product.url }}" target="_blank" rel="noopener noreferrer" class="list-group-item list-group-item-action">
+                                                {{ product.name }}
+                                                <i class="bi bi-box-arrow-up-right float-end"></i>
+                                            </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if info.products.fungicides %}
+                                    <div class="col-md-6 mb-3">
+                                        <h6 class="text-warning mb-2"><i class="bi bi-droplet"></i> Fungicides</h6>
+                                        <div class="list-group list-group-sm">
+                                            {% for product in info.products.fungicides %}
+                                            <a href="{{ product.url }}" target="_blank" rel="noopener noreferrer" class="list-group-item list-group-item-action">
+                                                {{ product.name }}
+                                                <i class="bi bi-box-arrow-up-right float-end"></i>
+                                            </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="alert alert-info small mt-3 mb-0">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    All product links redirect to Amazon for convenience. Compare prices and check availability in your region.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 d-flex gap-2">
+                <a href="/history" class="btn btn-info flex-grow-1">
+                    <i class="bi bi-clock-history"></i> View Full History
+                </a>
+                <a href="/resources" class="btn btn-success flex-grow-1">
+                    <i class="bi bi-shop"></i> View All Products
+                </a>
+                <button type="button" class="btn btn-secondary" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i> Analyze Another
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript for file handling -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const removeImageBtn = document.getElementById('removeImageBtn');
+    const uploadBox = document.querySelector('.upload-box');
+
+    // File input change handler
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewImage.src = event.target.result;
+                previewContainer.style.display = 'block';
+                fileName.textContent = file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+                fileInfo.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image handler
+    removeImageBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        imageInput.value = '';
+        previewContainer.style.display = 'none';
+        fileInfo.style.display = 'none';
+    });
+
+    // Drag and drop handlers
+    uploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadBox.style.borderColor = '#f39c12';
+        uploadBox.style.backgroundColor = 'rgba(243, 156, 18, 0.1)';
+    });
+
+    uploadBox.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadBox.style.borderColor = '';
+        uploadBox.style.backgroundColor = '';
+    });
+
+    uploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadBox.style.borderColor = '';
+        uploadBox.style.backgroundColor = '';
+        if (e.dataTransfer.files.length > 0) {
+            imageInput.files = e.dataTransfer.files;
+            const event = new Event('change', { bubbles: true });
+            imageInput.dispatchEvent(event);
+        }
+    });
+
+    // Form submit handler
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Analyzing...';
+    });
+});
+</script>
+
+<!-- Google Translate widget script -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+{% endblock %}
