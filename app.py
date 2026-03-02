@@ -909,6 +909,21 @@ def contact():
     return render_template('contact.html')
 
 
+@app.route('/debug/files')
+def debug_files():
+    """Check if model files exist on server."""
+    import os
+    info = {
+        'model_exists': os.path.exists(MODEL_PATH),
+        'model_size': os.path.getsize(MODEL_PATH) if os.path.exists(MODEL_PATH) else 0,
+        'class_indices_exists': os.path.exists('model/class_indices.json'),
+        'model_loaded': model is not None,
+        'cwd': os.getcwd(),
+        'model_path': MODEL_PATH
+    }
+    return jsonify(info)
+
+
 if __name__ == '__main__':
     # Load debug mode from environment, default to False for production
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
