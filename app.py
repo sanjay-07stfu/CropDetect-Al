@@ -89,6 +89,17 @@ def init_db():
             password_hash TEXT NOT NULL
         )
     ''')
+    # login audit log table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS login_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL,
+            action TEXT NOT NULL,
+            status TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            ip_address TEXT
+        )
+    ''')
     conn.commit()
     # create default admin if not present
     try:
@@ -439,6 +450,28 @@ def is_valid_email(email):
 def is_strong_password(password):
     """Return True if password meets minimum requirements."""
     return len(password) >= 6  # At minimum 6 characters
+
+
+def log_login_activity(email, action, status, ip_address=None):
+    """Log user login/logout activity to audit table.
+    
+    Args:
+        email: User email address
+        action: 'LOGIN' or 'LOGOUT'
+        status: 'SUCCESS' or 'FAILED'
+        ip_address: Client IP address (optional)
+    """
+    try:
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO login_logs (email, action, status, timestamp, ip_address) VALUES (?, ?, ?, ?, ?)',
+            (email, action, status, datetime.now().isoformat(), ip_address)
+        )
+        conn.commit()
+        conn.close()
+        logger.info(f'Logged: {action} - {email} - {status}')
+    except Exception as e:
+        logger.error(f'Error logging activity: {e}')
 
 
 def create_user(email, password):
@@ -863,11 +896,16 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        ip_address = request.remote_addr
         if verify_user(email, password):
             session['user'] = email
+            log_login_activity(email, 'LOGIN', 'SUCCESS', ip_address)
+            logger.info(f'User {email} logged in from {ip_address}')
             flash('Logged in successfully','success')
             return redirect(url_for('index'))
         else:
+            log_login_activity(email, 'LOGIN', 'FAILED', ip_address)
+            logger.warning(f'Failed login attempt for {email} from {ip_address}')
             flash('Invalid credentials','danger')
     return render_template('login.html')
 
@@ -890,7 +928,11 @@ def register():
 
 @app.route('/logout')
 def logout():
+    user_email = session.get('user', 'Unknown')
+    ip_address = request.remote_addr
     session.pop('user', None)
+    log_login_activity(user_email, 'LOGOUT', 'SUCCESS', ip_address)
+    logger.info(f'User {user_email} logged out from {ip_address}')
     flash('Logged out','info')
     return redirect(url_for('index'))
 
@@ -907,6 +949,22 @@ def resources():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+
+@app.route('/logs')
+def view_logs():
+    """View login activity logs (admin only)."""
+    if session.get('user') != 'admin@example.com':
+        flash('Unauthorized: Only admin can view logs.', 'danger')
+        return redirect(url_for('index'))
+    
+    conn = get_db_connection()
+    logs = conn.execute('SELECT * FROM login_logs ORDER BY id DESC LIMIT 100').fetchall()
+    conn.close()
+    
+    # Convert to dict for template
+    log_records = [dict(log) for log in logs]
+    return render_template('logs.html', logs=log_records)
 
 
 @app.route('/debug/files')

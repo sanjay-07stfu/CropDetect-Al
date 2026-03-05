@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Login Activity Logs - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5">
+                <i class="bi bi-shield-lock"></i> Login Activity Logs
+            </h1>
+            <p class="text-muted">Track all user login and logout activities</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Activities</h5>
+                    <p class="card-text display-6">{{ logs|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Successful Logins</h5>
+                    <p class="card-text display-6">
+                        {% set success_count = logs|selectattr('action', 'equalto', 'LOGIN')|selectattr('status', 'equalto', 'SUCCESS')|list|length %}
+                        {{ success_count }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Failed Attempts</h5>
+                    <p class="card-text display-6">
+                        {% set failed_count = logs|selectattr('status', 'equalto', 'FAILED')|list|length %}
+                        {{ failed_count }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Logouts</h5>
+                    <p class="card-text display-6">
+                        {% set logout_count = logs|selectattr('action', 'equalto', 'LOGOUT')|list|length %}
+                        {{ logout_count }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="bi bi-list"></i> Activity Log (Last 100 entries)</h5>
+        </div>
+        <div class="card-body">
+            {% if logs %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th><i class="bi bi-envelope"></i> Email Address</th>
+                                <th><i class="bi bi-door-open"></i> Action</th>
+                                <th><i class="bi bi-check-circle"></i> Status</th>
+                                <th><i class="bi bi-calendar-event"></i> Timestamp</th>
+                                <th><i class="bi bi-globe"></i> IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <strong>{{ log.email }}</strong>
+                                </td>
+                                <td>
+                                    {% if log.action == 'LOGIN' %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-box-arrow-in-right"></i> LOGIN
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-box-arrow-right"></i> LOGOUT
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.status == 'SUCCESS' %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> SUCCESS
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> FAILED
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ log.timestamp }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <code>{{ log.ip_address or 'N/A' }}</code>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>No logs found.</strong> There are no login/logout activities recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Activity Summary -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> Activity Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Total Recorded Activities:</strong> {{ logs|length }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Unique Users:</strong> 
+                            {{ logs|map(attribute='email')|unique|list|length }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>First Activity:</strong>
+                            {% if logs %}
+                                {{ logs[-1].timestamp }}
+                            {% else %}
+                                No data
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Latest Activity:</strong>
+                            {% if logs %}
+                                {{ logs[0].timestamp }}
+                            {% else %}
+                                No data
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Notes -->
+    <div class="alert alert-warning mt-4" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Security Notice:</strong> This logs page is visible to admin users only. 
+        All login attempts (successful and failed) are logged with IP addresses for security auditing purposes.
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.1) !important;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+    
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+    
+    code {
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+</style>
+{% endblock %}
