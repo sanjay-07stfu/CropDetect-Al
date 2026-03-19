@@ -8,13 +8,13 @@
         <i class="bi bi-image"></i> Leaf Disease Detection
     </h1>
     <p class="text-muted">
-        Upload a photo or capture live to identify crop diseases instantly.
+        Upload a leaf photo to identify crop diseases instantly.
     </p>
 </div>
 
 <!-- two column dashboard layout -->
 <div class="row">
-    <!-- left panel: upload / camera -->
+    <!-- left panel: upload -->
     <div class="col-lg-6">
         <!-- Demo Mode Alert -->
         {% if not info %}
@@ -54,6 +54,7 @@
                         style="display: none;"
                     >
                 </div>
+
                 <!-- description textarea -->
                 <div class="mb-3">
                     <label for="image_desc" class="form-label">Image Description (optional)</label>
@@ -80,12 +81,9 @@
             </form>
         </div>
 
-        <!-- camera & tips -->
+        <!-- actions & tips -->
         <div class="d-flex justify-content-between mb-4">
-            <a href="/camera" class="btn btn-primary me-2 w-50">
-                <i class="bi bi-camera-video"></i> Live Camera
-            </a>
-            <button type="button" class="btn btn-secondary w-50" onclick="location.reload();">
+            <button type="button" class="btn btn-secondary w-100" onclick="location.reload();">
                 <i class="bi bi-arrow-clockwise"></i> New Upload
             </button>
         </div>

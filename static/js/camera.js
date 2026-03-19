@@ -7,6 +7,7 @@ class CameraManager {
     constructor() {
         this.video = document.getElementById('video');
         this.captureBtn = document.getElementById('captureBtn');
+        this.leafHint = document.getElementById('leafHint');
         this.resultDiv = document.getElementById('result');
         this.stream = null;
         this.isInitialized = false;
@@ -165,12 +166,13 @@ class CameraManager {
      */
     async sendForAnalysis(imageData) {
         try {
+            const hintValue = this.leafHint ? this.leafHint.value : 'auto';
             const response = await fetch('/analyze', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: 'image_data=' + encodeURIComponent(imageData)
+                body: 'image_data=' + encodeURIComponent(imageData) + '&leaf_hint=' + encodeURIComponent(hintValue)
             });
 
             if (!response.ok) {

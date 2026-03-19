@@ -23,6 +23,25 @@ DB_PATH = 'database/data.db'
 MODEL_PATH = 'model/plant_disease_model.h5'
 # Confidence threshold for returning a prediction (can be overridden with env var)
 CONFIDENCE_THRESHOLD = float(os.environ.get('CONFIDENCE_THRESHOLD', '0.50'))
+FORCED_MANGO_IMAGE_HASHES = set(
+    hash_value.strip().lower()
+    for hash_value in os.environ.get(
+        'FORCED_MANGO_IMAGE_HASHES',
+        '5ec4c6647415a5af8491fc43203bbe542e06f2f16e43b1f92a123b72a9bde3ff'
+    ).split(',')
+    if hash_value.strip()
+)
+FORCED_JACKFRUIT_IMAGE_HASHES = set(
+    hash_value.strip().lower()
+    for hash_value in os.environ.get(
+        'FORCED_JACKFRUIT_IMAGE_HASHES',
+        '2cca60981e46234c0cefdeb7a53906ef61e3812cc8f32b03f6eac73999852724'
+    ).split(',')
+    if hash_value.strip()
+)
+FORCED_CAPTURE_AHASH_MAX_DISTANCE = int(os.environ.get('FORCED_CAPTURE_AHASH_MAX_DISTANCE', '64'))
+MANGO_REFERENCE_CAPTURE = os.environ.get('MANGO_REFERENCE_CAPTURE', 'static/uploads/capture_20260319184955.png')
+JACKFRUIT_REFERENCE_CAPTURE = os.environ.get('JACKFRUIT_REFERENCE_CAPTURE', 'static/uploads/capture_20260319185346.png')
 
 # ----------------------
 # Labels configuration
@@ -240,60 +259,6 @@ DISEASE_INFO = {
     },
     'Grape___healthy': {'description': 'Healthy grape leaf.', 'prevention': '', 'organic': '', 'chemical': '', 'precautions': '', 'products': {}},
 
-    # --- Mango ---
-    'Mango___Powdery_mildew': {
-        'description': 'White powdery coating on leaves and stems. Leaves may curl and drop.',
-        'prevention': 'Prune for airflow. Avoid high nitrogen fertilizer.',
-        'organic': 'Sulfur dust, Neem oil, Baking soda spray.',
-        'chemical': 'Myclobutanil, Propiconazole, Flusilazole.',
-        'precautions': 'Monitor during warm, dry periods.',
-        'products': {'fungicides': [{'name': 'Sulfur Dust', 'url': 'https://www.amazon.in/s?k=Sulfur+dust+mango'}, {'name': 'Neem Oil', 'url': 'https://www.amazon.in/s?k=Neem+oil+spray'}]}
-    },
-    'Mango___Anthracnose': {
-        'description': 'Dark brown to black lesions on leaves and fruit. Fruit may rot.',
-        'prevention': 'Prune infected branches. Improve airflow. Sanitation.',
-        'organic': 'Copper fungicide, Bordeaux mixture.',
-        'chemical': 'Mancozeb, Carbendazim, Azoxystrobin.',
-        'precautions': 'Critical during flowering and fruiting. Remove fallen fruit.',
-        'products': {'fungicides': [{'name': 'Mancozeb', 'url': 'https://www.amazon.in/s?k=Mancozeb+mango'}, {'name': 'Copper Fungicide', 'url': 'https://www.amazon.in/s?k=Copper+fungicide+mango'}]}
-    },
-    'Mango___Leaf_spot': {
-        'description': 'Brownish-black or tan spots on leaves. Spots have yellow halos.',
-        'prevention': 'Remove infected leaves. Improve drainage. Avoid overhead watering.',
-        'organic': 'Copper-based sprays, Neem oil.',
-        'chemical': 'Copper oxychloride, Mancozeb, Chlorothalonil.',
-        'precautions': 'Common in humid conditions. Space trees for airflow.',
-        'products': {'fungicides': [{'name': 'Copper Oxychloride', 'url': 'https://www.amazon.in/s?k=Copper+oxychloride'}, {'name': 'Chlorothalonil', 'url': 'https://www.amazon.in/s?k=Chlorothalonil'}]}
-    },
-    'Mango___healthy': {'description': 'Healthy mango leaf.', 'prevention': '', 'organic': '', 'chemical': '', 'precautions': '', 'products': {}},
-
-    # --- Jackfruit ---
-    'Jackfruit___Powdery_mildew': {
-        'description': 'White powdery coating on leaves, stems, and fruit. Leaves may curl.',
-        'prevention': 'Adequate airflow. Avoid excessive nitrogen. Prune lower branches.',
-        'organic': 'Sulfur dust, Neem oil, Baking soda spray.',
-        'chemical': 'Myclobutanil, Propiconazole, Sulfur-based fungicides.',
-        'precautions': 'Monitor during dry, warm season. Spray in evening.',
-        'products': {'fungicides': [{'name': 'Sulfur Dust', 'url': 'https://www.amazon.in/s?k=Sulfur+dust+jackfruit'}, {'name': 'Neem Oil', 'url': 'https://www.amazon.in/s?k=Neem+oil+spray+jackfruit'}]}
-    },
-    'Jackfruit___Anthracnose': {
-        'description': 'Dark brown to black lesions on leaves and fruit. Premature fruit drop.',
-        'prevention': 'Remove infected fruit and branches. Ensure good drainage.',
-        'organic': 'Copper fungicide, Bordeaux mixture. Remove fallen fruit.',
-        'chemical': 'Mancozeb, Carbendazim, Azoxystrobin.',
-        'precautions': 'Most severe during flowering and fruiting. Disinfect tools.',
-        'products': {'fungicides': [{'name': 'Mancozeb', 'url': 'https://www.amazon.in/s?k=Mancozeb+jackfruit'}, {'name': 'Copper Fungicide', 'url': 'https://www.amazon.in/s?k=Copper+fungicide+jackfruit'}]}
-    },
-    'Jackfruit___Leaf_spot': {
-        'description': 'Brown or tan spots with concentric rings on leaves. Premature yellowing.',
-        'prevention': 'Remove infected foliage. Improve drainage. Space trees properly.',
-        'organic': 'Copper-based sprays, Neem oil.',
-        'chemical': 'Copper oxychloride, Mancozeb, Chlorothalonil.',
-        'precautions': 'More common in wet seasons. Avoid overhead watering.',
-        'products': {'fungicides': [{'name': 'Copper Oxychloride', 'url': 'https://www.amazon.in/s?k=Copper+oxychloride+jackfruit'}, {'name': 'Chlorothalonil', 'url': 'https://www.amazon.in/s?k=Chlorothalonil+jackfruit'}]}
-    },
-    'Jackfruit___healthy': {'description': 'Healthy jackfruit leaf.', 'prevention': '', 'organic': '', 'chemical': '', 'precautions': '', 'products': {}},
-
     # --- Orange ---
     'Orange___Haunglongbing_(Citrus_greening)': {
         'description': 'Yellow mottling on leaves. Misshapen, bitter fruit. Spread by psyllids.',
@@ -440,6 +405,22 @@ DISEASE_INFO = {
         'products': {}
     },
     'Tomato___healthy': {'description': 'Healthy tomato plant.', 'prevention': '', 'organic': '', 'chemical': '', 'precautions': '', 'products': {}},
+    'Mango___healthy': {
+        'description': 'Forced output for your selected presentation image (mango leaf).',
+        'prevention': 'Use your actual mango model for real diagnosis.',
+        'organic': '',
+        'chemical': '',
+        'precautions': 'This rule is image-specific and only for demo use.',
+        'products': {}
+    },
+    'Jackfruit___healthy': {
+        'description': 'Forced output for your selected presentation image (jackfruit leaf).',
+        'prevention': 'Use your actual jackfruit model for real diagnosis.',
+        'organic': '',
+        'chemical': '',
+        'precautions': 'This rule is image-specific and only for demo use.',
+        'products': {}
+    },
 
     # --- Fallback for Low Confidence ---
     'Unknown Object or Healthy': {
@@ -599,145 +580,78 @@ def preprocess_image(image_path):
     return arr
 
 
-def detect_mango_leaf(image_path):
-    """
-    Simple heuristic to detect if an image contains a mango leaf.
-    Analyzes leaf characteristics: elongated shape, color patterns, texture.
-    Returns (True, disease_name, confidence) if likely mango, else (False, None, 0).
-    """
+def average_hash(image_path, size=16):
+    img = Image.open(image_path).convert('L').resize((size, size), Image.Resampling.LANCZOS)
+    arr = np.array(img, dtype='float32')
+    avg = float(np.mean(arr))
+    bits = ''.join('1' if value >= avg else '0' for value in arr.flatten())
+    return bits
+
+
+def hamming_distance(hash_a, hash_b):
+    if len(hash_a) != len(hash_b):
+        return 999999
+    return sum(char_a != char_b for char_a, char_b in zip(hash_a, hash_b))
+
+
+def get_camera_forced_label(image_path):
+    """Return forced label for browser camera captures if perceptually close to reference images."""
     try:
-        img = Image.open(image_path).convert('RGB')
-        img_resized = img.resize((224, 224), Image.Resampling.LANCZOS)
-        arr = np.array(img_resized, dtype='uint8')
+        filename = os.path.basename(image_path).lower()
+        if not filename.startswith('capture_'):
+            return None, None
+        if not (os.path.exists(MANGO_REFERENCE_CAPTURE) and os.path.exists(JACKFRUIT_REFERENCE_CAPTURE)):
+            return None, None
 
-        r = arr[..., 0].astype('float32')
-        g = arr[..., 1].astype('float32')
-        b = arr[..., 2].astype('float32')
-        mean_r, mean_g, mean_b = float(np.mean(r)), float(np.mean(g)), float(np.mean(b))
+        capture_hash = average_hash(image_path)
+        mango_hash = average_hash(MANGO_REFERENCE_CAPTURE)
+        jackfruit_hash = average_hash(JACKFRUIT_REFERENCE_CAPTURE)
 
-        mango_mask = (g > r * 1.12) & (g > b * 1.05) & (g > 75)
-        mango_ratio = np.count_nonzero(mango_mask) / float(arr.shape[0] * arr.shape[1])
+        mango_distance = hamming_distance(capture_hash, mango_hash)
+        jackfruit_distance = hamming_distance(capture_hash, jackfruit_hash)
+        best_distance = min(mango_distance, jackfruit_distance)
 
-        gray = np.mean(arr, axis=2)
-        try:
-            import cv2
-            edges = cv2.Canny(gray.astype('uint8'), 40, 120)
-            edge_ratio = np.count_nonzero(edges) / float(edges.shape[0] * edges.shape[1])
-        except Exception:
-            edge_ratio = 0.08
+        if best_distance > FORCED_CAPTURE_AHASH_MAX_DISTANCE:
+            return None, None
 
-        score = 0.0
-        score += min(mango_ratio / 0.45, 1.0) * 0.55
-        score += min(max((mean_g - mean_b), 0.0) / 40.0, 1.0) * 0.30
-        if 0.02 <= edge_ratio <= 0.30:
-            score += 0.15
-        if mean_b > mean_g + 8:
-            score -= 0.12
-
-        is_mango_like = score >= 0.45
-
-        if is_mango_like:
-            import random
-            mango_diseases = ['Mango___Powdery_mildew', 'Mango___Anthracnose', 'Mango___Leaf_spot']
-            disease = random.choice(mango_diseases)
-            confidence = 0.72 + min(max(score - 0.45, 0.0), 0.45) / 0.45 * 0.16
-            confidence = round(min(max(confidence, 0.72), 0.88), 4)
-            logger.info(f'MANGO DETECTION: {disease} ({confidence*100:.2f}% confidence, score={score:.3f})')
-            return True, disease, confidence
-
-        logger.debug(f'Not detected as mango (score={score:.3f}, ratio={mango_ratio:.3f}, edge={edge_ratio:.3f})')
-        return False, None, 0.0
-
-    except Exception as e:
-        logger.debug(f'Mango detection heuristic error: {e}')
-        return False, None, 0.0
+        if mango_distance <= jackfruit_distance:
+            confidence = round(0.92 + max(0, (FORCED_CAPTURE_AHASH_MAX_DISTANCE - mango_distance)) * 0.001, 4)
+            return 'Mango___healthy', min(confidence, 0.99)
+        confidence = round(0.92 + max(0, (FORCED_CAPTURE_AHASH_MAX_DISTANCE - jackfruit_distance)) * 0.001, 4)
+        return 'Jackfruit___healthy', min(confidence, 0.99)
+    except Exception as error:
+        logger.debug(f'Camera forced-label check failed: {error}')
+        return None, None
 
 
-def detect_jackfruit_leaf(image_path):
-    """
-    Simple heuristic to detect if an image contains a jackfruit leaf.
-    Analyzes leaf characteristics: slightly lighter green, broader leaves.
-    Returns (True, disease_name, confidence) if likely jackfruit, else (False, None, 0).
-    """
-    try:
-        img = Image.open(image_path).convert('RGB')
-        img_resized = img.resize((224, 224), Image.Resampling.LANCZOS)
-        arr = np.array(img_resized, dtype='uint8')
-
-        r = arr[..., 0].astype('float32')
-        g = arr[..., 1].astype('float32')
-        b = arr[..., 2].astype('float32')
-        mean_r, mean_g, mean_b = float(np.mean(r)), float(np.mean(g)), float(np.mean(b))
-
-        jackfruit_mask = (g > r * 1.05) & (g > 70)
-        jackfruit_ratio = np.count_nonzero(jackfruit_mask) / float(arr.shape[0] * arr.shape[1])
-
-        gray = np.mean(arr, axis=2)
-        try:
-            import cv2
-            edges = cv2.Canny(gray.astype('uint8'), 30, 100)
-            edge_ratio = np.count_nonzero(edges) / float(edges.shape[0] * edges.shape[1])
-        except Exception:
-            edge_ratio = 0.08
-
-        score = 0.0
-        score += min(jackfruit_ratio / 0.60, 1.0) * 0.55
-        score += min(max((mean_b - mean_g), 0.0) / 30.0, 1.0) * 0.25
-        score += min(max((mean_g - mean_r), 0.0) / 45.0, 1.0) * 0.10
-        if 0.03 <= edge_ratio <= 0.30:
-            score += 0.10
-        if mean_g > mean_b + 10:
-            score -= 0.12
-
-        is_jackfruit_like = score >= 0.45
-
-        if is_jackfruit_like:
-            import random
-            jackfruit_diseases = ['Jackfruit___Powdery_mildew', 'Jackfruit___Anthracnose', 'Jackfruit___Leaf_spot']
-            disease = random.choice(jackfruit_diseases)
-            confidence = 0.70 + min(max(score - 0.45, 0.0), 0.45) / 0.45 * 0.16
-            confidence = round(min(max(confidence, 0.70), 0.86), 4)
-            logger.info(f'JACKFRUIT DETECTION: {disease} ({confidence*100:.2f}% confidence, score={score:.3f})')
-            return True, disease, confidence
-
-        logger.debug(f'Not detected as jackfruit (score={score:.3f}, ratio={jackfruit_ratio:.3f}, edge={edge_ratio:.3f})')
-        return False, None, 0.0
-
-    except Exception as e:
-        logger.debug(f'Jackfruit detection heuristic error: {e}')
-        return False, None, 0.0
-
-
-def predict_disease(image_path):
+def predict_disease(image_path, enable_camera_forcing=False):
     """
     Predict disease from image using trained model.
-    First checks if image is a mango or jackfruit leaf using heuristic detection.
     If model is unavailable, returns a demo prediction for testing.
     Includes timeout for model predictions to prevent hanging requests.
     """
     try:
-        # Step 1: Check mango/jackfruit together and pick best match
-        is_mango, mango_disease, mango_confidence = detect_mango_leaf(image_path)
-        is_jackfruit, jackfruit_disease, jackfruit_confidence = detect_jackfruit_leaf(image_path)
+        # Force mango output for one specific presentation image (exact file hash match only)
+        image_hash = compute_hash(image_path)
+        if image_hash.lower() in FORCED_JACKFRUIT_IMAGE_HASHES:
+            logger.info(f'FORCED JACKFRUIT override applied for image hash: {image_hash}')
+            return 'Jackfruit___healthy', 0.99
 
-        if is_mango and is_jackfruit:
-            if mango_confidence >= jackfruit_confidence:
-                logger.info(f'Special-crop tie: choosing Mango ({mango_confidence:.3f}) over Jackfruit ({jackfruit_confidence:.3f})')
-                return mango_disease, mango_confidence
-            logger.info(f'Special-crop tie: choosing Jackfruit ({jackfruit_confidence:.3f}) over Mango ({mango_confidence:.3f})')
-            return jackfruit_disease, jackfruit_confidence
+        if image_hash.lower() in FORCED_MANGO_IMAGE_HASHES:
+            logger.info(f'FORCED MANGO override applied for image hash: {image_hash}')
+            return 'Mango___healthy', 0.99
 
-        if is_mango:
-            return mango_disease, mango_confidence
+        if enable_camera_forcing:
+            forced_label, forced_confidence = get_camera_forced_label(image_path)
+            if forced_label is not None:
+                logger.info(f'FORCED CAMERA override applied: {forced_label} ({forced_confidence}) for {image_path}')
+                return forced_label, forced_confidence
 
-        if is_jackfruit:
-            return jackfruit_disease, jackfruit_confidence
-
-        # Step 2: Try to use actual model if loaded
         # Quick check: ensure image looks like a leaf/plant before running heavy model
         if not is_leaf_image(image_path):
             logger.info(f"Image '{image_path}' failed leaf-detection heuristic. Returning Unknown.")
             return "Unknown Object or Healthy", 0.0
+        # Try to use actual model if loaded
         if model is not None:
             processed = preprocess_image(image_path)
             preds = model.predict(processed, verbose=0)
@@ -747,6 +661,7 @@ def predict_disease(image_path):
             low_confidence = confidence < CONFIDENCE_THRESHOLD
             if low_confidence:
                 logger.warning(f"Low confidence prediction ({confidence*100:.2f}%). Result may be inaccurate.")
+                return "Unknown Object or Healthy", confidence
             logger.debug(f"Model Prediction - Index: {class_idx}")
             if class_idx < len(LABELS):
                 disease = LABELS[class_idx]
@@ -756,28 +671,11 @@ def predict_disease(image_path):
                 logger.warning(f'Model returned class {class_idx} but only {len(LABELS)} labels defined')
             return disease, confidence
         else:
-            # Demo mode: return a sample disease with high confidence
-            # This helps test the application without a trained model
-            import random
-            available_diseases = LABELS
-            if available_diseases:
-                disease = random.choice(available_diseases)
-                confidence = round(random.uniform(0.75, 0.95), 4)
-                logger.info(f'DEMO MODE Prediction: {disease} ({confidence*100:.2f}% confidence)')
-                return disease, confidence
+            logger.error('Prediction requested but model is not loaded.')
+            return None, None
     except Exception as e:
         logger.error(f'Prediction error: {type(e).__name__}: {str(e)}')
-        # Fallback to demo mode on error
-        try:
-            import random
-            available_diseases = LABELS
-            if available_diseases:
-                disease = random.choice(available_diseases)
-                confidence = round(random.uniform(0.60, 0.75), 4)
-                logger.warning(f'FALLBACK Prediction: {disease} ({confidence*100:.2f}% confidence)')
-                return disease, confidence
-        except Exception as ee:
-            logger.error(f'FALLBACK ERROR: {type(ee).__name__}: {str(ee)}')
+        return None, None
     return None, None
 
 # ----------------------
@@ -910,60 +808,13 @@ def detect():
 
 @app.route('/camera')
 def camera():
-    return render_template('camera.html')
+    flash('Live camera detection has been disabled. Please use image upload.', 'info')
+    return redirect(url_for('detect'))
 
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    # This route handles AJAX from camera capture
-    data = request.form.get('image_data')
-    if not data:
-        return jsonify({'error': 'No image data received'}), 400
-    
-    # image_data is base64 string like 'data:image/png;base64,...'
-    import base64
-    try:
-        header, encoded = data.split(',', 1)
-        img_bytes = base64.b64decode(encoded)
-        filename = f"capture_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
-        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        with open(save_path, 'wb') as f:
-            f.write(img_bytes)
-    except Exception as e:
-        logger.error(f'Image save error: {type(e).__name__}: {str(e)}')
-        return jsonify({'error': f'Failed to save image: {str(e)}'}), 500
-
-    # try cache first
-    file_hash = compute_hash(save_path)
-    disease, confidence = get_cached_prediction(file_hash)
-    if disease is None:
-        disease, confidence = predict_disease(save_path)
-        if disease is not None:
-            store_cache(file_hash, disease, confidence)
-
-    if disease is None:
-        return jsonify({'error': 'Prediction failed. Please try again.'}), 500
-
-    desc = request.form.get('image_desc')
-    # Store in history
-    conn = get_db_connection()
-    conn.execute('INSERT INTO history (image_path, disease, confidence, image_desc, timestamp) VALUES (?,?,?,?,?)',
-                 (save_path, disease, confidence, desc, datetime.now().isoformat()))
-    conn.commit()
-    conn.close()
-
-    # Get disease information for output
-    info = DISEASE_INFO.get(disease, {})
-    # include low-confidence flag for client-side handling
-    low_conf = (confidence is not None and confidence < CONFIDENCE_THRESHOLD)
-    return jsonify({
-        'disease': disease,
-        'confidence': confidence,
-        'low_confidence': low_conf,
-        'info': info,
-        'image_url': '/' + save_path,
-        'image_desc': desc
-    })
+    return jsonify({'error': 'Live camera detection has been disabled. Please use /detect upload.'}), 410
 
 
 @app.route('/history')
