@@ -149,5 +149,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+    <script type="text/javascript">
+function googleTranslateElementInit() {
+    const targetId = document.getElementById('google_translate_element_detect')
+        ? 'google_translate_element_detect'
+        : (document.getElementById('google_translate_element') ? 'google_translate_element' : null);
+
+    if (!targetId) {
+        return;
+    }
+
+    new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, targetId);
+}
+</script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
