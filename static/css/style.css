@@ -1102,6 +1102,11 @@ footer a:hover {
     animation: fadeInScale 0.8s ease-out;
 }
 
+/* Translated content area */
+.translated {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 @keyframes fadeInScale {
     from {
         opacity: 0;

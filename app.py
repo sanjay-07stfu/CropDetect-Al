@@ -1,6 +1,8 @@
 import os
 import sqlite3
 import logging
+import base64
+import io
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from werkzeug.utils import secure_filename
@@ -808,13 +810,56 @@ def detect():
 
 @app.route('/camera')
 def camera():
-    flash('Live camera detection has been disabled. Please use image upload.', 'info')
-    return redirect(url_for('detect'))
+    return render_template('camera.html')
 
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    return jsonify({'error': 'Live camera detection has been disabled. Please use /detect upload.'}), 410
+    image_data = request.form.get('image_data')
+    if not image_data:
+        return jsonify({'error': 'No image data provided'}), 400
+
+    try:
+        # data URL format: data:image/jpeg;base64,<payload>
+        if ',' in image_data:
+            image_data = image_data.split(',', 1)[1]
+
+        binary = base64.b64decode(image_data)
+        image = Image.open(io.BytesIO(binary)).convert('RGB')
+
+        filename = f"capture_{datetime.now().strftime('%Y%m%d%H%M%S%f')}.jpg"
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image.save(save_path, format='JPEG', quality=92)
+
+        file_hash = compute_hash(save_path)
+        disease, confidence = get_cached_prediction(file_hash)
+        if disease is None:
+            disease, confidence = predict_disease(save_path, enable_camera_forcing=False)
+            if disease is not None:
+                store_cache(file_hash, disease, confidence)
+
+        if disease is None:
+            return jsonify({'error': 'Could not analyze the image. Please try again.'}), 500
+
+        info = DISEASE_INFO.get(disease, {})
+
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO history (image_path, disease, confidence, timestamp) VALUES (?,?,?,?)',
+            (save_path, disease, confidence if confidence is not None else 0.0, datetime.now().isoformat())
+        )
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            'disease': disease.replace('_', ' '),
+            'confidence': float(confidence if confidence is not None else 0.0),
+            'image_url': '/' + save_path,
+            'info': info
+        })
+    except Exception as error:
+        logger.error(f'Live analyze error: {type(error).__name__}: {error}')
+        return jsonify({'error': 'Live camera analysis failed. Please retry.'}), 500
 
 
 @app.route('/history')

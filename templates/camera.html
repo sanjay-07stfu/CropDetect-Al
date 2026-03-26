@@ -29,15 +29,6 @@
                                 style="border-radius: 8px;"
                             ></video>
                         </div>
-                        <div class="mt-3">
-                            <label for="leafHint" class="form-label fw-bold mb-1">Leaf Type Hint (for demo)</label>
-                            <select id="leafHint" class="form-select">
-                                <option value="auto" selected>Auto Detect</option>
-                                <option value="mango">Mango Leaf</option>
-                                <option value="jackfruit">Jackfruit Leaf</option>
-                            </select>
-                            <small class="text-muted">Choose Mango/Jackfruit to force stable live-camera output for presentation.</small>
-                        </div>
                         <button 
                             id="captureBtn" 
                             type="button" 
@@ -102,4 +93,5 @@
         background: #000;
     }
 </style>
+<script src="/static/js/camera.js"></script>
 {% endblock %}
