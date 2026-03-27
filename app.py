@@ -61,6 +61,28 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 # Use environment variable for SECRET_KEY, fallback to a generated value
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production-' + os.urandom(16).hex())
 
+
+@app.before_request
+def require_login_for_protected_routes():
+    """Restrict all app features to authenticated users except login/register/static assets."""
+    public_endpoints = {'login', 'register', 'static'}
+
+    endpoint = request.endpoint
+    if endpoint is None:
+        return
+
+    if endpoint in public_endpoints:
+        return
+
+    if session.get('user'):
+        return
+
+    if request.path.startswith('/api/') or endpoint == 'analyze':
+        return jsonify({'error': 'Authentication required'}), 401
+
+    flash('Please log in to continue.', 'warning')
+    return redirect(url_for('login'))
+
 # Ensure upload and database directories exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -70,8 +92,10 @@ os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 # ----------------------
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30)
     conn.row_factory = sqlite3.Row
+    conn.execute('PRAGMA journal_mode=WAL')
+    conn.execute('PRAGMA busy_timeout = 30000')
     return conn
 
 
@@ -478,6 +502,16 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def normalize_email(email):
+    """Normalize user input email for consistent login/register behavior."""
+    if not email:
+        return ''
+    normalized = email.strip().lower()
+    if normalized == 'admin':
+        return 'admin@example.com'
+    return normalized
+
+
 def is_valid_email(email):
     """Basic email validation."""
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -513,6 +547,7 @@ def log_login_activity(email, action, status, ip_address=None):
 
 def create_user(email, password):
     """Create a new user with email and password validation."""
+    email = normalize_email(email)
     if not is_valid_email(email):
         return False, 'Invalid email format'
     if not is_strong_password(password):
@@ -535,6 +570,7 @@ def create_user(email, password):
 
 
 def verify_user(email, password):
+    email = normalize_email(email)
     conn = get_db_connection()
     row = conn.execute('SELECT password_hash FROM users WHERE email = ?', (email,)).fetchone()
     conn.close()
@@ -783,11 +819,15 @@ def detect():
                 flash(f'Low confidence prediction ({confidence*100:.1f}%). Result may be incorrect.', 'warning')
 
             # store in history (even if cached)
-            conn = get_db_connection()
-            conn.execute('INSERT INTO history (image_path, disease, confidence, image_desc, timestamp) VALUES (?,?,?,?,?)',
-                         (save_path, disease, confidence, desc, datetime.now().isoformat()))
-            conn.commit()
-            conn.close()
+            try:
+                conn = get_db_connection()
+                conn.execute('INSERT INTO history (image_path, disease, confidence, image_desc, timestamp) VALUES (?,?,?,?,?)',
+                             (save_path, disease, confidence, desc, datetime.now().isoformat()))
+                conn.commit()
+                conn.close()
+            except sqlite3.OperationalError as db_error:
+                logger.error(f'History save failed: {db_error}')
+                flash('Prediction completed, but history save is temporarily busy. Please try again.', 'warning')
 
             # Get disease information
             info = DISEASE_INFO.get(disease, {})
@@ -842,19 +882,23 @@ def analyze():
             return jsonify({'error': 'Could not analyze the image. Please try again.'}), 500
 
         info = DISEASE_INFO.get(disease, {})
+        try:
+            conn = get_db_connection()
+            conn.execute(
+                'INSERT INTO history (image_path, disease, confidence, timestamp) VALUES (?,?,?,?)',
+                (save_path, disease, confidence if confidence is not None else 0.0, datetime.now().isoformat())
+            )
+            conn.commit()
+            conn.close()
+        except sqlite3.OperationalError as db_error:
+            logger.error(f'Live history save failed: {db_error}')
 
-        conn = get_db_connection()
-        conn.execute(
-            'INSERT INTO history (image_path, disease, confidence, timestamp) VALUES (?,?,?,?)',
-            (save_path, disease, confidence if confidence is not None else 0.0, datetime.now().isoformat())
-        )
-        conn.commit()
-        conn.close()
+        image_url = '/' + save_path.replace('\\', '/')
 
         return jsonify({
             'disease': disease.replace('_', ' '),
             'confidence': float(confidence if confidence is not None else 0.0),
-            'image_url': '/' + save_path,
+            'image_url': image_url,
             'info': info
         })
     except Exception as error:
@@ -971,8 +1015,8 @@ def update_note(record_id):
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+        email = normalize_email(request.form.get('email', ''))
+        password = request.form.get('password', '')
         ip_address = request.remote_addr
         if verify_user(email, password):
             session['user'] = email
@@ -990,7 +1034,7 @@ def login():
 @app.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
-        email = request.form.get('email', '').strip()
+        email = normalize_email(request.form.get('email', ''))
         password = request.form.get('password', '')
         if not email or not password:
             flash('Email and password required','warning')

@@ -126,6 +126,17 @@ class CameraManager {
      */
     async captureAndAnalyze() {
         try {
+            if (!this.video.videoWidth || !this.video.videoHeight) {
+                this.resultDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Camera is still initializing. Please wait 1-2 seconds and try again.
+                    </div>
+                `;
+                this.enableCapture();
+                return;
+            }
+
             // Create canvas and draw current video frame
             const canvas = document.createElement('canvas');
             canvas.width = this.video.videoWidth;
@@ -174,7 +185,14 @@ class CameraManager {
             });
 
             if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
+                let errorMessage = `Server error: ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.error) {
+                        errorMessage = errorData.error;
+                    }
+                } catch (e) {}
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();

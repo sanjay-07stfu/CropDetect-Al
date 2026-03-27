@@ -1,112 +1,33 @@
 {% extends 'base.html' %}
 {% block title %}Register - AI Crop Disease Detection{% endblock %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - AI Crop Disease Detection</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-            transition: transform 0.3s ease;
-        }
-        .login-card:hover {
-            transform: translateY(-5px);
-        }
-        .login-header {
-            background: #27ae60;
-            padding: 25px;
-            text-align: center;
-            color: white;
-        }
-        .login-header h2 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.6rem;
-        }
-        .login-body {
-            padding: 30px;
-        }
-        .btn-login {
-            background: #27ae60;
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .btn-login:hover {
-            background: #219150;
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-        }
-    </style>
-</head>
-<body>
 
 {% block content %}
-<div class="login-container">
-    <div class="login-card">
-        <h2 class="text-center mb-4">Create Account</h2>
-        <form method="post">
-            <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email Address" required>
-<div class="login-card">
-    <div class="login-header">
-        <i class="fas fa-user-plus fa-2x mb-2"></i>
-        <h2>Create Account</h2>
-        <p>Join the Farmer Community</p>
-    </div>
-    <div class="login-body">
-        <form action="/register" method="POST">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required>
-                <label for="name">Full Name</label>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow border-0">
+            <div class="card-header bg-success text-white text-center py-3">
+                <h3 class="mb-0"><i class="bi bi-person-plus"></i> Create Account</h3>
             </div>
-            <div class="mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                <label for="email">Email address</label>
-            </div>
-            <button type="submit" class="btn btn-success w-100">Register</button>
-            <div class="form-floating mb-4">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                <label for="password">Password</label>
-            </div>
+            <div class="card-body p-4">
+                <form method="post" action="/register">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                    </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-login mb-4">REGISTER</button>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Minimum 6 characters" required>
+                    </div>
 
-            <div class="text-center">
-                <p class="text-secondary" style="font-size: 0.9rem;">Already have an account? <a href="/login" class="text-decoration-none fw-bold" style="color: #27ae60;">Sign In</a></p>
+                    <button type="submit" class="btn btn-success w-100">Register</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small>Already have an account? <a href="/login">Login here</a></small>
+                </div>
             </div>
-            
-            <div class="text-center mt-2">
-                <a href="/" class="text-decoration-none text-secondary" style="font-size: 0.85rem;"><i class="fas fa-arrow-left me-1"></i> Back to Home</a>
-            </div>
-        </form>
-        <p class="text-center mt-3">
-            Already have an account? <a href="/login">Login here</a>
-        </p>
+        </div>
     </div>
 </div>
 {% endblock %}
-
-</body>
-</html>
