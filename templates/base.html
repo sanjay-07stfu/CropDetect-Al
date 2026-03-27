@@ -150,44 +150,60 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-    <!-- Google Translate Widget -->
-    <div id="google_translate_global"></div>
+    <!-- Google Translate Widget (re-added clean) -->
+    <div id="google_translate_global" style="display:none;"></div>
     <script type="text/javascript">
-        function googleTranslateElementInit() {
-            const target = document.getElementById('google_translate_element_detect')
+        function renderGoogleTranslator() {
+            const targetId = document.getElementById('google_translate_element_detect')
                 ? 'google_translate_element_detect'
                 : 'google_translate_global';
-            const targetEl = document.getElementById(target);
-            if (!targetEl) return;
-            if (targetEl.dataset.initialized === 'true') return;
 
+            const targetElement = document.getElementById(targetId);
+            if (!targetElement) return false;
+
+            if (targetElement.querySelector('select.goog-te-combo')) {
+                return true;
+            }
+
+            if (!(window.google && google.translate && google.translate.TranslateElement)) {
+                return false;
+            }
+
+            targetElement.innerHTML = '';
             new google.translate.TranslateElement({
                 pageLanguage: 'en',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
-            }, target);
-            targetEl.dataset.initialized = 'true';
+            }, targetId);
+
+            return true;
         }
+
+        function googleTranslateElementInit() {
+            renderGoogleTranslator();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let attempts = 0;
+            const timer = setInterval(function () {
+                attempts += 1;
+                const rendered = renderGoogleTranslator();
+                if (rendered || attempts >= 20) {
+                    clearInterval(timer);
+                }
+            }, 300);
+        });
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <style>
-        /* Google Translate Widget Styling */
-
-        #google_translate_global {
-            display: none;
-            height: 0;
-            overflow: hidden;
-        }
-
         #google_translate_element_detect {
             display: inline-block;
+            min-height: 30px;
         }
 
         .goog-te-banner-frame,
-        .goog-te-banner-frame.skiptranslate,
-        iframe.goog-te-banner-frame,
-        iframe.goog-te-banner-frame.skiptranslate {
+        iframe.goog-te-banner-frame {
             display: none !important;
         }
 
@@ -195,76 +211,16 @@ document.addEventListener('DOMContentLoaded', () => {
             top: 0 !important;
         }
 
-        .navbar.sticky-top {
-            top: 0 !important;
-        }
-
-        body.translated-ltr,
-        body.translated-rtl {
-            top: 0 !important;
-        }
-
-        body.translated-ltr .navbar.sticky-top,
-        body.translated-rtl .navbar.sticky-top {
-            top: 0 !important;
-        }
-
         .goog-te-gadget-simple {
-            background-color: transparent !important;
             border: none !important;
-            padding: 0 !important;
-        }
-
-        .goog-te-gadget {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            background: transparent !important;
         }
 
         .goog-te-combo {
-            padding: 8px 12px !important;
             border-radius: 6px !important;
             border: 1px solid #dee2e6 !important;
-            background-color: #f8f9fa !important;
-            font-size: 0.9rem !important;
-            cursor: pointer !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            color: #333 !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .goog-te-combo:hover {
-            background-color: #e9ecef !important;
-            border-color: #bbb !important;
-        }
-
-        .goog-te-combo:focus {
-            outline: none !important;
-            border-color: #27ae60 !important;
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1) !important;
-        }
-
-        .goog-te-menu-value {
-            color: #333 !important;
-            font-weight: 500 !important;
-        }
-
-        .goog-te-menu-value:hover {
-            color: #27ae60 !important;
-        }
-
-        /* Dark mode support */
-        body.dark-mode .goog-te-combo {
-            background-color: #2d2d2d !important;
-            border-color: #444 !important;
-            color: #e0e0e0 !important;
-        }
-
-        body.dark-mode .goog-te-combo:hover {
-            background-color: #3d3d3d !important;
-            border-color: #555 !important;
-        }
-
-        body.dark-mode .goog-te-menu-value {
-            color: #e0e0e0 !important;
+            padding: 6px 10px !important;
+            font-size: 0.85rem !important;
         }
     </style>
 </body>

@@ -464,38 +464,70 @@ DISEASE_INFO = {
 # ----------------------
 import hashlib
 
-# Simple leaf detector heuristic: count "green" pixels and compare to threshold.
-# This is intentionally lightweight (no extra model) to filter non-leaf images (people, objects, indoor scenes).
-# It uses a simple RGB-based test so it works without OpenCV.
-LEAF_GREEN_PERCENT = float(os.environ.get('LEAF_GREEN_PERCENT', '0.02'))  # 2% green pixels by default
+# Stronger leaf detector heuristic for camera frames.
+# Uses HSV green mask + center-region check + largest connected component check
+# to reject non-leaf scenes (people/background with small green patches).
+LEAF_GREEN_PERCENT = float(os.environ.get('LEAF_GREEN_PERCENT', '0.10'))
+LEAF_CENTER_GREEN_PERCENT = float(os.environ.get('LEAF_CENTER_GREEN_PERCENT', '0.08'))
+LEAF_LARGEST_COMPONENT_PERCENT = float(os.environ.get('LEAF_LARGEST_COMPONENT_PERCENT', '0.04'))
 
 def is_leaf_image(image_path, sample_size=224):
-    """Return True if the image contains enough green pixels to likely be a leaf.
+    """Return True if the image likely contains a leaf.
 
-    Heuristic: a pixel is "green" when G is substantially greater than R and B
-    and above a minimum absolute threshold. Works with RGB images.
+    Heuristic details:
+    - Green pixel percent across full frame must exceed threshold
+    - Green percent in center crop must exceed threshold
+    - Largest green connected component must exceed threshold
     """
     try:
         img = Image.open(image_path).convert('RGB')
         # resize to speed up processing and normalize
         img = img.resize((sample_size, sample_size), Image.Resampling.BILINEAR)
-        arr = np.array(img)
-        r = arr[..., 0].astype('int32')
-        g = arr[..., 1].astype('int32')
-        b = arr[..., 2].astype('int32')
+        arr_rgb = np.array(img)
 
-        # green pixel if g significantly larger than r and b and g high enough
-        green_mask = (g > r * 1.10) & (g > b * 1.10) & (g > 80)
-        green_count = int(np.count_nonzero(green_mask))
-        total = arr.shape[0] * arr.shape[1]
-        pct = green_count / float(total)
-        # debug log
-        logger.debug(f'Leaf check: {green_count}/{total} green pixels ({pct*100:.2f}%)')
-        return pct >= LEAF_GREEN_PERCENT
+        # RGB -> HSV (OpenCV expects BGR)
+        arr_bgr = cv2.cvtColor(arr_rgb, cv2.COLOR_RGB2BGR)
+        hsv = cv2.cvtColor(arr_bgr, cv2.COLOR_BGR2HSV)
+
+        # Green mask in HSV
+        lower_green = np.array([25, 40, 40], dtype=np.uint8)
+        upper_green = np.array([95, 255, 255], dtype=np.uint8)
+        green_mask = cv2.inRange(hsv, lower_green, upper_green)
+
+        total_pixels = green_mask.size
+        green_pixels = int(np.count_nonzero(green_mask))
+        green_pct = green_pixels / float(total_pixels)
+
+        # Center crop check: leaf is typically centered in intentional captures
+        h, w = green_mask.shape
+        y0, y1 = int(h * 0.20), int(h * 0.80)
+        x0, x1 = int(w * 0.20), int(w * 0.80)
+        center_mask = green_mask[y0:y1, x0:x1]
+        center_green_pct = float(np.count_nonzero(center_mask)) / float(center_mask.size)
+
+        # Largest connected green component check
+        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats((green_mask > 0).astype(np.uint8), connectivity=8)
+        largest_component = 0
+        if num_labels > 1:
+            largest_component = int(np.max(stats[1:, cv2.CC_STAT_AREA]))
+        largest_component_pct = largest_component / float(total_pixels)
+
+        logger.debug(
+            "Leaf check: green=%.2f%% center=%.2f%% largest=%.2f%%",
+            green_pct * 100,
+            center_green_pct * 100,
+            largest_component_pct * 100,
+        )
+
+        return (
+            green_pct >= LEAF_GREEN_PERCENT
+            and center_green_pct >= LEAF_CENTER_GREEN_PERCENT
+            and largest_component_pct >= LEAF_LARGEST_COMPONENT_PERCENT
+        )
     except Exception as e:
         logger.warning(f'is_leaf_image failed: {e}')
-        # on error, assume it might be a leaf to avoid false negatives
-        return True
+        # safer for demo/live detection: reject on processing failure
+        return False
 
 def allowed_file(filename):
     return '.' in filename and \
