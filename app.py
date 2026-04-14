@@ -9,8 +9,14 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from PIL import Image
 import numpy as np
+
+# Ensure matplotlib cache is writable on Windows environments.
+os.environ.setdefault('MPLCONFIGDIR', os.path.join(os.environ.get('LOCALAPPDATA', os.getcwd()), 'matplotlib'))
+os.makedirs(os.environ['MPLCONFIGDIR'], exist_ok=True)
+
 import tensorflow as tf
 import re
+import cv2
 
 # Setup logging for production
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -989,7 +995,8 @@ def api_predict():
         conn.close()
         # include low-confidence flag for API clients
         low_conf = (confidence is not None and confidence < CONFIDENCE_THRESHOLD)
-        return jsonify({'disease':disease,'confidence':confidence,'low_confidence':low_conf,'image_url':'/'+save_path})
+        image_url = '/' + save_path.replace('\\', '/')
+        return jsonify({'disease':disease,'confidence':confidence,'low_confidence':low_conf,'image_url':image_url})
     return jsonify({'error':'invalid_file'}), 400
 
 # dark mode script injection later in template via static or inline
@@ -1009,7 +1016,7 @@ def precache_all():
 
 @app.route('/precache')
 def precache():
-    if session.get('user') != 'admin':
+    if session.get('user') != 'admin@example.com':
         flash('Unauthorized access to cache operation.', 'danger')
         return redirect(url_for('index'))
     precache_all()

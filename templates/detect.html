@@ -110,31 +110,6 @@
         <div class="d-flex justify-content-end mb-3">
             <div id="google_translate_element_detect"></div>
         </div>
-        <div id="detectTranslateFallback" class="mb-3" style="display:none; max-width: 260px; margin-left:auto;">
-            <label for="detectFallbackLanguage" class="form-label small mb-1">Translate page</label>
-            <select id="detectFallbackLanguage" class="form-select form-select-sm">
-                <option value="">Select language</option>
-                <option value="hi">Hindi</option>
-                <option value="te">Telugu</option>
-                <option value="ta">Tamil</option>
-                <option value="kn">Kannada</option>
-                <option value="ml">Malayalam</option>
-                <option value="mr">Marathi</option>
-                <option value="bn">Bengali</option>
-                <option value="gu">Gujarati</option>
-                <option value="pa">Punjabi</option>
-                <option value="ur">Urdu</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="pt">Portuguese</option>
-                <option value="ar">Arabic</option>
-                <option value="ru">Russian</option>
-                <option value="zh-CN">Chinese</option>
-                <option value="ja">Japanese</option>
-                <option value="ko">Korean</option>
-            </select>
-        </div>
 
         {% if disease %}
         <div class="result-container">
@@ -392,27 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Analyzing...';
     });
 
-    // Translator fallback: show custom selector if Google widget doesn't render
-    const translateTarget = document.getElementById('google_translate_element_detect');
-    const translateFallback = document.getElementById('detectTranslateFallback');
-    const translateFallbackLanguage = document.getElementById('detectFallbackLanguage');
-
-    setTimeout(() => {
-        if (translateTarget && translateFallback) {
-            const hasGoogleDropdown = !!translateTarget.querySelector('select.goog-te-combo');
-            if (!hasGoogleDropdown) {
-                translateFallback.style.display = 'block';
-            }
-        }
-    }, 2500);
-
-    if (translateFallbackLanguage) {
-        translateFallbackLanguage.addEventListener('change', function() {
-            if (!this.value) return;
-            const currentUrl = window.location.href.split('#')[0];
-            window.location.href = `https://translate.google.com/translate?sl=en&tl=${this.value}&u=${encodeURIComponent(currentUrl)}`;
-        });
-    }
 });
 </script>
 
