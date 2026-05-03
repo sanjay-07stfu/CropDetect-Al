@@ -162,15 +162,29 @@ document.addEventListener('DOMContentLoaded', () => {
             'ug','uz','vi','cy','xh','yi','yo','zu'
         ];
 
-        function renderGoogleTranslator() {
-            const targetId = document.getElementById('google_translate_element_detect')
+        let translatorMounted = false;
+
+        function getTranslatorTargetId() {
+            return document.getElementById('google_translate_element_detect')
                 ? 'google_translate_element_detect'
                 : 'google_translate_global';
+        }
+
+        function showTranslatorStatus(message) {
+            const targetElement = document.getElementById(getTranslatorTargetId());
+            if (!targetElement || translatorMounted) return;
+
+            targetElement.innerHTML = '<small class="translate-status-text">' + message + '</small>';
+        }
+
+        function renderGoogleTranslator() {
+            const targetId = getTranslatorTargetId();
 
             const targetElement = document.getElementById(targetId);
             if (!targetElement) return false;
 
-            if (targetElement.querySelector('select.goog-te-combo')) {
+            if (translatorMounted || targetElement.querySelector('.goog-te-gadget') || targetElement.querySelector('select.goog-te-combo')) {
+                translatorMounted = true;
                 return true;
             }
 
@@ -178,13 +192,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return false;
             }
 
-            targetElement.innerHTML = '';
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: GOOGLE_TRANSLATE_LANGUAGES.join(','),
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, targetId);
+            try {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: GOOGLE_TRANSLATE_LANGUAGES.join(','),
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, targetId);
+                translatorMounted = true;
+            } catch (error) {
+                console.error('Google Translate init failed:', error);
+                return false;
+            }
 
             return true;
         }
@@ -200,17 +219,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rendered = renderGoogleTranslator();
                 if (rendered || attempts >= 20) {
                     clearInterval(timer);
+                    if (!rendered) {
+                        showTranslatorStatus('Translator unavailable. Please check network/access to translate.google.com');
+                    }
                 }
             }, 300);
         });
     </script>
-    <div id="google_translate_global" style="display:none;"></div>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div id="google_translate_global" class="translate-widget-global"></div>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" onerror="showTranslatorStatus('Translator script blocked or network issue detected')"></script>
 
     <style>
         #google_translate_element_detect {
             display: inline-block;
             min-height: 30px;
+        }
+
+        #google_translate_global {
+            display: block;
+            min-height: 30px;
+        }
+
+        .translate-widget-global {
+            position: fixed;
+            right: 14px;
+            bottom: 14px;
+            z-index: 1050;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(4px);
+        }
+
+        body.dark-mode .translate-widget-global {
+            background: rgba(33, 37, 41, 0.95);
         }
 
         #google_translate_global .goog-te-gadget,
@@ -237,6 +280,15 @@ document.addEventListener('DOMContentLoaded', () => {
             border: 1px solid #dee2e6 !important;
             padding: 6px 10px !important;
             font-size: 0.85rem !important;
+        }
+
+        .translate-status-text {
+            color: #b02a37;
+            font-weight: 600;
+        }
+
+        body.dark-mode .translate-status-text {
+            color: #ff9ea6;
         }
     </style>
 </body>
