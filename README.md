@@ -52,52 +52,5 @@ project/
 └── README.md
 ```
 
-## 🛠 Setup Instructions
 
-1. **Clone repository**
-   ```bash
-   git clone <repo-url>
-   cd project
-   ```
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\\Scripts\\activate
-   ```
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. **Place your trained model**
-   - Copy your Keras model (`.h5`) into `model/crop_model.h5`.
-5. **Run the application**
-   ```bash
-   python app.py
-   ```
-6. **Open browser**
-   - Visit `http://localhost:5000`
 
-## ☁️ Deployment
-
-- Build Docker image:
-  ```bash
-  docker build -t crop-disease-app .
-  ```
-- Run container:
-  ```bash
-  docker run -p 5000:5000 crop-disease-app
-  ```
-
-Deployment steps for Render/Railway/AWS/GCP can be extended in documentation.
-
-## ✅ Notes
-
-- Ensure model input size 224x224 and normalized
-- SQLite database created on first run
-
-## 📸 Sample Images
-
-Place your test images under `static/images/` for quick access.
-
----
-Final year project submission ready! 🎓
